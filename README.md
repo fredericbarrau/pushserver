@@ -1,11 +1,26 @@
 Pushserver
 ===========================
 
-Pushserver is a push management platform for both IOS and Android. It allows to send pushes by application, by target (several applications at the same time), or by device.
+Pushserver is a push management platform for both IOS and Android notifications.
 
-It provides a Rest API to send push to both platform and to organize applications, devices and target.
+Features : 
 
-Pushserver comes with a simple GUI for administration and testing purpose.
+* Works as a service (REST API)
+* Manages several applications
+* Offer to regroup several applications as a single target for notifications
+* Send notifications to one application or to several applications at the same time using target
+* Filter the devices you want to notify with custom criteria 
+* Testing capabilities : simulate the sending of notifications, send a notification to a single device
+* Simple GUI for configuring applications, targets, viewing the registerd devices, sending notifications and viewing already send notifications
+
+![Image of GUI : push]
+(https://github.com/fredericbarrau/images/blob/master/pushserver/gui-push.jpg)
+
+![Image of GUI : application]
+(https://github.com/fredericbarrau/images/blob/master/pushserver/gui-app.jpg)
+
+![Image of GUI : listing]
+(https://github.com/fredericbarrau/images/blob/master/pushserver/gui-list.jpg)
 
 ## Installation
 
@@ -17,13 +32,6 @@ Pushserver uses [mongoDB](http://www.mongodb.org/about/introduction/) to store d
 
 ```shell
 $ git clone 
-$ npm install
-```
-
-+ Using npm
-
-```shell
-$ npm install pushserver
 $ npm install
 ```
 
