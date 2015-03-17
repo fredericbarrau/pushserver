@@ -1,0 +1,12 @@
+- var urlLvl2 = '/' + urlParts[0] + '/' + urlParts[1];
+.col-xs-3.col-sm-3.col-md-3.col-lg-3
+  .list-group.ps-left-menu
+    a.list-group-item(href='/admin/application', class='/admin/application' === urlLvl2 && 'active')
+      h4.list-group-item-heading Application
+      p.list-group-item-text Android or Iphone applications to send pushes
+    a.list-group-item(href='/admin/target', class='/admin/target' === urlLvl2 && 'active')
+      h4.list-group-item-heading Target
+      p.list-group-item-text Managing group of applications for push targeting
+    a.list-group-item(href='/admin/device', class='/admin/device' === urlLvl2 && 'active')
+      h4.list-group-item-heading Device
+      p.list-item-group-text User devices

@@ -1,0 +1,44 @@
+extends ../layout
+
+block admin-content
+  .panel.panel-default
+    //
+       Default panel contents 
+    .panel-heading View a device
+    .panel-body
+      .col-xs-12.col-sm-12.col-md-12.col-lg-12
+        .row
+          form.form-horizontal(role='form')
+            .form-group
+              label.col-sm-2.control-label ID
+              .col-sm-10
+                p.form-control-static #{obj.id}
+            .form-group
+              label.col-sm-2.control-label Name
+              .col-sm-10
+                p.form-control-static  #{obj.name}
+            .form-group
+              label.col-sm-2.control-label Token
+              .col-sm-10
+                p.form-control-static  #{obj.token}
+            .form-group
+              label.col-sm-2.control-label Type
+              .col-sm-10
+                p.form-control-static #{obj.type}
+            .form-group
+              label.col-sm-2.control-label Application
+              .col-sm-10
+                p.form-control-static= allApplications[obj.application] && allApplications[obj.application].name
+
+            - var prop = null,i=0;
+            for value,prop in obj
+              if i===0
+                hr
+                h4 Additionnal values
+                - i=1
+              if (["application","name","id","token","type"].indexOf(prop) < 0)
+                .form-group
+                  label.col-sm-2.control-label #{prop}
+                  .col-sm-10
+                    p.form-control-static= JSON.stringify(obj[prop])
+            +backToListButton

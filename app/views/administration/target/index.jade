@@ -1,0 +1,39 @@
+extends ../layout
+
+block admin-content
+    if message
+      div.alert.alert-success= message
+
+    .panel.panel-default
+      //
+         Default panel contents 
+      .panel-heading List all targets
+      .panel-body
+        p
+          a.btn.btn-primary.btn-sm(href='/admin/target/add')
+            span.glyphicon.glyphicon-plus
+            |  Adding a new target
+      table.table.table-striped.table-bordered
+        thead
+          tr
+            th Name
+            th Description
+            th Actions
+        tbody
+          
+          each obj in objs
+            tr
+              td= obj.name
+              td= obj.description
+              td
+                .btn-group.btn-group-xs
+                  a.btn.btn-default(href='/admin/target/view/#{obj.id}')
+                    span.glyphicon.glyphicon-eye-open
+                    |  View
+                  a.btn.btn-default(href='/admin/target/edit/#{obj.id}')
+                    span.glyphicon.glyphicon-pencil
+                    |  Edit
+                  button.btn.btn-default(href='/api/targets/target/#{obj.id}', data-delete-id=obj.id, data-delete-name=obj.name)
+                    span.glyphicon.glyphicon-trash
+                    |  Delete
+    include ../../pagination

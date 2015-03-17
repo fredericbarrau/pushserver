@@ -1,0 +1,43 @@
+extends ../layout
+
+block admin-content
+    if message
+      div.alert.alert-success= message
+
+    .panel.panel-default
+      //
+         Default panel contents 
+      .panel-heading List all applications
+      .panel-body
+        p
+          a.btn.btn-primary.btn-sm(href='/admin/application/add')
+            span.glyphicon.glyphicon-plus
+            |  Adding a new application
+      table.table.table-striped.table-bordered
+        thead
+          tr
+            th Name
+            th Status
+            th Type
+            th ID
+            th Actions
+        tbody
+          each obj in objs 
+            tr(class=(obj.enabled?"":"text-muted"))
+              td= obj.name
+              td= (obj.enabled?"Enabled":"Disabled")
+              td
+                +dressDeviceType(obj.type)
+              td= obj.id
+              td
+                .btn-group.btn-group-xs
+                  a.btn.btn-default(href='/admin/application/view/#{obj.id}')
+                    span.glyphicon.glyphicon-eye-open
+                    |  View
+                  a.btn.btn-default(href='/admin/application/edit/#{obj.id}')
+                    span.glyphicon.glyphicon-pencil
+                    |  Edit
+                  button.btn.btn-default(href='/api/applications/application/#{obj.id}', data-delete-name=obj.name, data-delete-id=obj.id )
+                    span.glyphicon.glyphicon-trash
+                    |  Delete
+    include ../../pagination

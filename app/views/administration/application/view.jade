@@ -1,0 +1,44 @@
+extends ../layout
+
+block admin-content
+  .panel.panel-default
+    //
+       Default panel contents 
+    .panel-heading View an application
+    .panel-body
+      .col-xs-12.col-sm-12.col-md-12.col-lg-12
+        .row
+          form.form-horizontal(role='form')
+            .form-group
+              label.col-sm-2.control-label(for='inputID') ID
+              .col-sm-10
+                p.form-control-static #{obj.id}
+            .form-group
+              label.col-sm-2.control-label(for='inputEnabled') Status
+              .col-sm-10
+                p.form-control-static=  (obj.enabled?"Enabled":"Disabled")
+            .form-group
+              label.col-sm-2.control-label(for='inputName') Name
+              .col-sm-10
+                p.form-control-static  #{obj.name}
+            .form-group
+              label.col-sm-2.control-label(for='inputType') Type
+              .col-sm-10
+                p.form-control-static #{obj.type}
+            .form-group
+              label.col-sm-2.control-label(for='inputKey') Key
+              .col-sm-10
+                pre.form-control-static #{obj.key}
+            .form-group
+              label.col-sm-2.control-label(for='inputCert') Cert
+              .col-sm-10
+                pre.form-control-static #{obj.cert}
+            .form-group
+              label.col-sm-2.control-label(for='inputPassphrase') Passphrase
+              .col-sm-10
+                p.form-control-static #{obj.passphrase}
+            .form-group
+              label.col-sm-2.control-label(for='inputKey') Pfx
+              .col-sm-10
+                pre.form-control-static #{obj.pfx}                
+            +backToListButton

@@ -1,0 +1,15 @@
+{
+  "pushserver": {
+    "apn": {
+      "connection": {
+        "buffersNotifications": false // no resend when failure
+      }
+    },
+    "dbConfig": {
+      "connectionUrl": "mongodb://localhost/pushserver-staging"
+    },
+    "port": 4002,
+    "bindAddressAPI": "0.0.0.0",
+    "bindAddressGUI": "0.0.0.0"
+  }
+}

@@ -1,0 +1,12 @@
+{
+	"pushserver": {
+		"dbConfig": {
+			"connectionUrl": "mongodb://cdrofserver/pushserver-development"
+		},
+		"bindAddressGUI": ["128.1.15.107","127.0.0.1"],
+		"bindAddressAPI": ["127.0.0.1","128.1.15.107"],
+    "log" : {
+      "access" : true
+    }
+	}
+}

@@ -1,0 +1,56 @@
+extends ../layout
+
+block admin-content
+  if error && ( error.message || error.err )
+    div.alert.alert-danger
+      strong Error :
+      =error.message
+      =error.err
+      if error.errors
+        ul
+          each msg in error.errors
+            li= msg
+
+  .panel.panel-default
+    //
+       Default panel contents 
+    .panel-heading= title
+    .panel-body
+      .col-xs-8.col-sm-8.col-md-8.col-lg-8
+        .row
+          form.form-horizontal(role='form',method='post')
+            if obj && obj.id
+              .form-group
+                label.col-sm-2.control-label(for='inputId') ID
+                .col-sm-10
+                  input#inputId.form-control(type='text', disabled="disabled" value= obj && obj.id)
+                  p.help-block Target ID
+            .form-group(class=error && error.errors && error.errors.name && 'has-error')
+              label.col-sm-2.control-label(for='inputName') Name
+              .col-sm-10
+                input#inputName.form-control(type='text', placeholder='Name', name="name", value= obj && obj.name)
+                p.help-block Enter a name for the target
+            .form-group(class=error && error.errors && error.errors.description && 'has-error')
+              label.col-sm-2.control-label(for='inputName') Description
+              .col-sm-10
+                textarea#inputDescription.form-control(rows="5", placeholder='Enter a description', name="description")
+                  = obj && obj.description
+                p.help-block Enter a description for the target
+            .form-group(class=error && error.errors && error.errors.applications && 'has-error')
+              label.col-sm-2.control-label(for='inputApplications') Applications
+              .col-sm-10
+                select#inputApplications.form-control(name='applications',multiple="true",title="Select applications for this target")
+                  - var selected = false;
+                  each app in allApplications
+                    if obj && obj.applications
+                      - selected = (obj.applications.indexOf(app.id) >= 0) ;
+                    option(value=app.id,selected=selected)= app.name + ' - ' + app.type
+                p.help-block Select the applications to send the pushes with this target
+            .form-group.ps-submit-group
+              .col-sm-offset-2.col-sm-10
+                a.btn.btn-default(href='/admin/target') Cancel the modifications
+                button.btn.btn-primary(type='submit') Save 
+  //
+     panel 
+//
+  row 

@@ -1,0 +1,12 @@
+{
+  "pushserver": {
+    "dbConfig": {
+      "connectionUrl": "mongodb://cdrofserver.ouest-france.fr/pushserver-test"
+    },
+    "name": "DEV - Test Push Manager",
+    "port": 4000,
+    "log" : {
+      "access": true
+    }
+  }
+}

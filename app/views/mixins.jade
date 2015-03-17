@@ -1,0 +1,14 @@
+mixin backToListButton
+  .form-group
+    .col-sm-offset-2.col-sm-10
+      a.btn.btn-default(href='#',onclick="history.go(-1);return false;") Back to the list
+
+mixin dressDeviceType(type)
+  if type
+    case type.toUpperCase()
+      when "TARGET"
+        span.label.label-info #{type.toUpperCase()}
+      when "IOS"
+        span.label.label-success #{type.toUpperCase()}
+      when "ANDROID"
+        span.label.label-warning #{type.toUpperCase()}

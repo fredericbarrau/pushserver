@@ -1,0 +1,36 @@
+{
+  "pushserver": {
+    "apn": {
+      "connection": {
+        "cacheLength": 20000,
+        "autoAdjustCache": true,
+        "connectionTimeout" : "3600000",
+        "maxConnections" : 2
+      },
+      "feedback": {
+        "batchFeedback": true,
+        "interval": 43200, //"interval" : 10
+        "removeUserIfUnreachableSince": 1296000
+      }
+    },
+    "dbConfig": {
+      "connectionUrl": "mongodb://localhost/pushserver"
+    },
+    "gcm": {
+      "connection": {
+        "numRetries": 4
+      },
+      "messageOptions": {
+        "delayWhileIdle": true,
+        "timeToLive": 3
+      }
+    },
+    "name": "Push Manager",
+    "port": 3002,
+    "bindAddressAPI": "0.0.0.0",
+    "bindAddressGUI": "0.0.0.0",
+    "log" : {
+        "access" : true
+    }
+  }
+}

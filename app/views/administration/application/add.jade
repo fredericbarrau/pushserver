@@ -1,0 +1,81 @@
+extends ../layout
+
+block admin-content
+  if error && ( error.message || error.err )
+    div.alert.alert-danger
+      strong Error :
+      =error.message
+      =error.err
+      if error.errors
+        ul
+          each msg in error.errors
+            li= msg
+
+  .panel.panel-default
+    //
+       Default panel contents 
+    .panel-heading= title
+    .panel-body
+      .col-xs-8.col-sm-8.col-md-8.col-lg-8
+        .row
+          form.form-horizontal(role='form',method='post')
+            if obj && obj.id
+              .form-group
+                label.col-sm-2.control-label(for='inputName') ID
+                .col-sm-10
+                  input#inputName.form-control(type='text', disabled="disabled" value= obj && obj.id)
+            .form-group(class=error && error.errors && error.errors.name && 'has-error')
+              label.col-sm-2.control-label(for='inputName') Name
+              .col-sm-10
+                input#inputName.form-control(type='text', placeholder='Name', name="name", value= obj && obj.name)
+                p.help-block Name of the application
+            .form-group
+              .col-sm-offset-2.col-sm-10
+                .checkbox
+                  label
+                    input#inputEnabled(name="enabled",type="hidden",value="false")
+                    input#inputEnabled(name='enabled',type="checkbox",value="true",checked=obj && obj.enabled)
+                    | Enabled
+                p.help-block If disabled, no notification can be send to this application.                 
+            .form-group(class=error && error.errors && error.errors.type && 'has-error')
+              label.col-sm-2.control-label(for='inputType') Type
+              .col-sm-10
+                - var typeSelected = obj && obj.type;
+                select#inputType.form-control(name='type')
+                  option(value='') Select an application type
+                  option(value='android',selected=typeSelected == 'android' && 'selected') Android
+                  option(value='ios',selected=typeSelected == 'ios' && 'selected') IOS
+                p.help-block Type of the application : <em>ios</em> or <em>android</em> 
+            .form-group(class=error && error.errors && error.errors.key && 'has-error')
+              label.col-sm-2.control-label(for='inputKey') Key
+              .col-sm-10
+                textarea#inputKey.form-control(name='key', rows='3')
+                  =obj && obj.key
+                p.help-block File path to the application's server key (GCM or IOS) or a string containing the key data.
+            .form-group(class=error && error.errors && error.errors.cert && 'has-error')
+              label.col-sm-2.control-label(for='inputCert') Cert
+              .col-sm-10
+                textarea#inputCert.form-control(name='cert', rows='3')
+                  =obj && obj.cert
+                p.help-block <strong>IOS only</strong> - File path to the application's certificate or a string containing the certificate data.
+            .form-group(class=error && error.errors && error.errors.passphrase && 'has-error')
+              label.col-sm-2.control-label(for='inputPassphrase') Passphrase
+              .col-sm-10
+                input#inputPassphrase.form-control(type='text', name='passphrase', placeholder='Enter passphrase if any',value= obj && obj.passphrase)
+                p.help-block <strong>IOS only</strong> - The passphrase for decoding your key & certificate, if any.
+                .alert.alert-warning
+                  | <strong>Warning :</strong> a wrong passphrase may prevent the server from starting. 
+            .form-group(class=error && error.errors && error.errors.pfx && 'has-error')
+              label.col-sm-2.control-label(for='inputPfx') Pfx
+              .col-sm-10
+                textarea#inputPfx.form-control(name='pfx', rows='3')
+                  =obj && obj.pfx
+                p.help-block  <strong>IOS only</strong> - File path for private key, certificate and CA certs in PFX or PKCS12 format, or a string containing the PFX data. If supplied, it will be used instead of certificate and key above.
+            .form-group.ps-submit-group
+              .col-sm-offset-2.col-sm-10
+                a.btn.btn-default(href='/admin/application') Cancel the modifications
+                button.btn.btn-primary(type='submit') Save 
+  //
+     panel 
+//
+  row 

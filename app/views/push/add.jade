@@ -1,0 +1,89 @@
+extends layout
+
+block push-content
+  if error && ( error.message || error.err )
+    div.alert.alert-danger
+      strong Error :
+      =error.message
+      =error.err
+      if error.errors
+        ul
+          each msg in error.errors
+            li= msg
+
+  .panel.panel-default
+    //
+       Default panel contents 
+    .panel-heading Create and send a push
+    .panel-body
+      .col-xs-8.col-sm-8.col-md-8.col-lg-8
+        .row
+          form#pushForm.form-horizontal(role='form',method='post')
+            .form-group
+              label.col-sm-2.control-label(for='targetType') Target type
+              .col-sm-10
+                select#targetType.form-control(name='targetType')
+                  option(value=0) Select a target type
+                  option(value=1) Target - send to multiple applications at the same time
+                  option(value=2) Application - send to a single application
+                  option(value=3) Device - send to a single user
+                p.help-block (Required) Select a target type
+
+            #targetBlock.form-group(class=error && error.errors && error.errors.target && 'has-error',style="display:none")
+              label.col-sm-2.control-label(for='inputTarget') Target
+              .col-sm-10
+                select#inputTarget.form-control(name='target')
+                  option(value=0) Select a target
+                  each target in allTargets
+                    option(value=target.id)= target.name
+                p.help-block Target to send to the push to.
+                 
+            #applicationBlock.form-group(class=error && error.errors && error.errors.type && 'has-error',style="display:none")
+              label.col-sm-2.control-label(for='inputApplication') Application
+              .col-sm-10
+                select#inputApplication.form-control(name='application')
+                  option(value=0) Select an application
+                  each application in allApplications
+                    if application.enabled === true
+                      option(value=application.id)= application.name + ' - ' + application.type
+                p.help-block Application to send to the push to.
+
+            #deviceBlock.form-group(class=error && error.errors && error.errors.device && 'has-error',style="display:none")
+              label.col-sm-2.control-label(for='inputDevice') Device
+              .col-sm-10
+                select#inputDevice.form-control(name="device")
+                p.help-block Device to send to the push to.
+
+            .form-group(class=error && error.errors && error.errors.payload && 'has-error')
+              label.col-sm-2.control-label(for='inputPayload') Payload
+              .col-sm-10
+                textarea#inputPayload.form-control(name='payload', placeholder="{\"message\":\"\Simpliest payload you can get. With a message!\"}",rows='6')
+                  =obj && obj.payload
+                p.help-block Payload (json) to send
+
+            .form-group(class=error && error.errors && error.errors.customCriteria && 'has-error')
+              label.col-sm-2.control-label(for='inputCustomCriteria') Custom Criteria
+              .col-sm-10
+                textarea#inputCustomCriteria.form-control(name='customCriteria', rows='4')
+                  =obj && obj.customCriteria
+                p.help-block Optional custom criteria for selecting the targeted devices. Must be valid JSON and use mongoDB query syntax.
+
+            .form-group
+              .col-sm-offset-2.col-sm-10
+                .checkbox
+                  label
+                    input#inputSimulate(name='simulate',type="checkbox")
+                    | Simulate
+                p.help-block Do not send push, return the tokens eligible for push with the criteria specified.
+            .form-group.ps-submit-group
+              .col-sm-offset-2.col-sm-10
+                button.btn.btn-default(type="reset") Cancel the modifications
+                button#sendPushAction.btn.btn-primary(type="submit") Send the push
+
+  #tokens.panel.panel-success(style="display:none")
+    .panel-heading This push would be send to the following tokens 
+      span.badge
+    .panel-body
+      .row
+        .col-sm-12
+          p#tokensContent.tokens

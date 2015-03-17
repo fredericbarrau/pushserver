@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  .col-md-12
+    .row
+      .jumbotron
+        h1 Welcome to PushServer
+        p Send notifications to Apple and Android devices. <br/> Configure your apps, register your devices and you're good to go. 
+          a.btn.btn-primary.btn-lg(role="button",href="/doc") Learn more
+    .row
+      h2 Organize your applications, targets and devices
+      p Manage the applications you have on Google & Apple stores. You will need to provide the keys and certificates for you apps, in order to be able to send push. 
+      p Create specific targets to send you notifications to several applications at the same time.   
+      a.btn.btn-primary.btn-sm(role="button",href="admin") Configure
+      h2 Send some push
+      p Use the test form to test your configuration and send notifications to a single device, an application, or a target. 
+      a.btn.btn-primary.btn-sm(role="button",href="push") Try to send push
+      h2 Server Configuration
+      p This is the configuration of the <code>#{global.config.util.getEnv('NODE_ENV').toUpperCase()}</code> environment.
+      pre !{config}

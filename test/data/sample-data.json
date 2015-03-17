@@ -1,0 +1,89 @@
+{
+  "applications": [{
+    "name": "New APP",
+    "enabled" : true,
+    "type": "ios",
+    "key": "some key",
+    "cert": "some cert"
+  }, {
+    "name": "Another APP",
+    "enabled" : true,
+    "type": "android",
+    "key": "some key 1",
+    "cert": "some cert"
+  }, {
+    "name": "Third APP",
+    "enabled" : true,
+    "type": "ios",
+    "key": "some key 2",
+    "cert": "some cert"
+  }, {
+    "name": "Falsy APP"
+  }, {
+    "name": "APP for Search tests",
+    "enabled" : true,
+    "type": "android",
+    "key": "some key 3"
+  }],
+  "targets": [{
+    "name": "Some target",
+    "description": "some description",
+    "applications": []
+  }, {
+    "name": "Some other target",
+    "description": "some other description",
+    "applications": []
+  }],
+  "devices": [{
+      "token": "Token1",
+      "application": "",
+      "type": "ios",
+      "name": "some ios device"
+    }, {
+      "token": "Token2",
+      "application": "",
+      "type": "android",
+      "name": "some android device"
+    }, {
+      "token": "Token3",
+      "application": "",
+      "type": "ios",
+      "name": "some other ios device"
+    }, {
+      "token": "Token with sport only",
+      "application": "",
+      "type": "ios",
+      "name": "some ios device",
+      "sport" : true
+    }, {
+      "token": "Token with sport and news",
+      "application": "",
+      "type": "android",
+      "name": "some android device",
+      "sport" : true,
+      "news" : true
+    }, {
+      "token": "Token with news only",
+      "application": "",
+      "type": "ios",
+      "name": "some other ios device",
+      "news" : true
+    },
+    {
+      "token": "Token with news and custom array",
+      "application": "",
+      "type": "ios",
+      "name": "some other ios device",
+      "news" : true,
+      "customArray" : ["11","22","33"]
+    },
+    {
+      "token": "Token with sport and custom array",
+      "application": "",
+      "type": "ios",
+      "name": "some other ios device",
+      "sport" : true,
+      "customArray" : ["22","33"]
+    }
+  ]
+}

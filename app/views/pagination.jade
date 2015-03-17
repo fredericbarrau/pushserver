@@ -1,0 +1,40 @@
+
+.row
+  .col-xs-8.col-sm-8.col-md-8.col-lg-8
+    if paginate.hasPreviousPages || paginate.hasNextPages(pageCount)
+      - var i = ((pageCount - page) > 5)?page:(pageCount-5);
+      - var maxPage = ((pageCount - page) > 5)?(page+5):pageCount;
+      - if (i<=0) i=1;
+      - if (maxPage<=0) maxPage = pageCount;
+      ul.pagination
+        li
+          a(href=paginate.href({"page":1})) &lt;&lt;
+        if paginate.hasPreviousPages
+          li
+            a(href=paginate.href(true)) &lt;
+        else
+          li.disabled
+            a(href='#') &lt;
+        while (i <= maxPage)
+          if (page === i)
+            li.active
+              a= i++
+          else
+            li
+              a(href=paginate.href({"page":i}))= i++
+
+        if paginate.hasNextPages(pageCount)
+          li
+            a(href=paginate.href()) &gt;
+        else
+          li.disabled
+            a(href='#') &gt;
+        li
+          a(href=paginate.href({"page":pageCount})) &gt;&gt;
+  .col-xs-4.col-sm-4.col-md-4.col-lg-4
+    .pagination
+      small.text-muted Items per page 
+      .btn-group.btn-group-sm(role=group)
+        a.btn.btn-default(href=paginate.href({"page":page,limit:10})) 10
+        a.btn.btn-default(href=paginate.href({"page":page,limit:20})) 20
+        a.btn.btn-default(href=paginate.href({"page":page,limit:100})) 100

@@ -1,0 +1,12 @@
+mixin liBc(urlArr,limit)
+  - var url = '/' + urlArr.slice(0,limit+1).join('/');
+  li
+    a(href=url)= urlArr[limit]
+
+ol.breadcrumb
+  - var limit = ((urlParts.length>3)?3:urlParts.length);
+  - for (var index=0;index < limit;index++)
+    if (index < (limit - 1) )
+      +liBc(urlParts,index)
+    else
+      li= urlParts[index]

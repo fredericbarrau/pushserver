@@ -1,0 +1,26 @@
+extends ../layout
+
+block admin-content
+  .panel.panel-default
+    //
+       Default panel contents 
+    .panel-heading View a target
+    .panel-body
+      .col-xs-12.col-sm-12.col-md-12.col-lg-12
+        .row
+          form.form-horizontal(role='form')
+            .form-group
+              label.col-sm-2.control-label(for='inputID') ID
+              .col-sm-10
+                p.form-control-static #{obj.id}
+            .form-group
+              label.col-sm-2.control-label(for='inputName') Name
+              .col-sm-10
+                p.form-control-static  #{obj.name}
+            .form-group
+              label.col-sm-2.control-label(for='inputType') Applications
+              .col-sm-10
+                p.form-control-static
+                each app in obj.applications
+                  span [#{allApplications[app].type}]#{allApplications[app].name} - 
+            +backToListButton

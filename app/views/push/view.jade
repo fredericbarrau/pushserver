@@ -1,0 +1,46 @@
+extends layout
+
+block push-content
+  .panel.panel-default
+    //
+       Default panel contents 
+    .panel-heading View a push
+    .panel-body
+      .col-xs-12.col-sm-12.col-md-12.col-lg-12
+        .row
+          form.form-horizontal(role='form')
+            .form-group
+              label.col-sm-2.control-label(for='inputID') ID
+              .col-sm-10
+                p.form-control-static #{obj.id}
+            .form-group
+              label.col-sm-2.control-label(for='inputSend') Send
+              .col-sm-10
+                p.form-control-static= moment(obj.created.date).format('DD/MM/YYYY HH:mm')
+            .form-group
+              label.col-sm-2.control-label(for='inputApplication') Application
+              .col-sm-10
+                if obj.application && allApplications[obj.application]
+                  p.form-control-static| #{allApplications[obj.application].name} - #{allApplications[obj.application].type}  (#{obj.application})
+            .form-group
+              label.col-sm-2.control-label(for='inputTarget') Target
+              .col-sm-10
+                if obj.target && allTargets[obj.target]
+                  p.form-control-static| #{allTargets[obj.target].name} - #{obj.target}
+             .form-group
+              label.col-sm-2.control-label(for='inputDevice') Device
+              .col-sm-10
+                p.form-control-static #{obj.device}
+            .form-group
+              label.col-sm-2.control-label(for='inputPayload') Payload
+              .col-sm-10
+                p.form-control-static #{obj.payload}
+            .form-group
+              label.col-sm-2.control-label(for='inputCustomCriteria') CustomCriteria
+              .col-sm-10
+                p.form-control-static #{obj.customCriteria}
+            .form-group
+              label.col-sm-2.control-label(for='inputStats') Stats
+              .col-sm-10
+                p.form-control-static= JSON.stringify(obj.stats)
+            +backToListButton

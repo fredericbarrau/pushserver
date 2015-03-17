@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-md-12
+                h1 Error :-(
+                    h2 #{error.status} : #{message}
+                    if (global.config.util.getEnv('NODE_ENV').toUpperCase() == "DEVELOPMENT")
+                        pre.alert.alert-danger #{error.stack}

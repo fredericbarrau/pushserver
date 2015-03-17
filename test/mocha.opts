@@ -1,0 +1,4 @@
+--require should test/bootstrap.js
+--require superagent
+--require test/bootstrap.js
+--ui bdd

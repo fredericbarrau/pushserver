@@ -1,0 +1,19 @@
+- var urlLvl1= '/' + urlParts[0];
+.navbar.navbar-default.navbar-fixed-top(role='navigation')
+  .container
+    nav
+      a.navbar-brand(href='/')
+        span.glyphicon.glyphicon-phone
+        | Pushserver
+      ul.nav.navbar-nav
+        li(class='/admin' === urlLvl1 && 'active')
+          a(href='/admin/application') Administration
+        li(class='/pushes' === urlLvl1 && 'active')
+          a(href='/pushes') Push
+        li(class='/doc' === urlLvl1 && 'active')
+          a(href='/doc') Documentation
+      ul.nav.navbar-nav.navbar-right
+        li(class='/config' === urlLvl1 && 'active') 
+          p.navbar-text Environment : 
+            - var env= global.config.util.getEnv('NODE_ENV').toUpperCase();
+            span.label(class=(env==='PRODUCTION')?'label-danger':'label-info') #{global.config.util.getEnv('NODE_ENV').toUpperCase()}

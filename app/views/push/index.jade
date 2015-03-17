@@ -1,0 +1,65 @@
+extends layout
+
+block push-content
+  div. #{target}
+  if message
+    div.alert.alert-success= message
+
+  .panel.panel-default
+    //
+       Default panel contents 
+    .panel-heading List all pushes
+    .panel-body
+      .input-group
+        a.btn.btn-primary.btn-sm(href='/push')
+          span.glyphicon.glyphicon-plus
+          |  Sending a new push
+      form#pushesFilter.form-inline
+        .form-group.form-group-sm.filters
+          label.control-label Filter by :
+          select#inputType.form-control.input-sm(name='target',title="Target filter")
+            option(value="") Any target
+            - var selected = false;
+            each fTarget in allTargets
+              if target
+                - selected = (target == fTarget.id);
+              option(value=fTarget.id,selected=selected)= fTarget.name
+        .form-group.form-group-sm.filters
+          select#inputApplication.form-control.input-sm(name='application',title="Application filter")
+            option(value="") Any application 
+            - var selected = false;
+            each fApp in allApplications
+              if application
+                - selected = (application == fApp.id);
+              option(value=fApp.id,selected=selected)= fApp.name + ' - ' + fApp.type
+        .form-group.form-group-sm.filters
+          input.form-control.btn.btn-primary.input-sm(type="submit",value="Filter")
+        .form-group.form-group-sm.filters
+          input.form-control.btn.btn-primary.input-sm(type="reset",value="Reset")          
+    table.table.table-striped.table-bordered
+      thead
+        tr
+          th Send
+          th To
+          th Payload
+          th Action
+      tbody
+        - var labelTo =  "", labelType= "";
+        each obj in objs
+          - labelTo = (obj.target && allTargets[obj.target] && allTargets[obj.target].name) || (obj.application && allApplications[obj.application] && allApplications[obj.application].name)  + ((obj.device && " - Single Device")||"");
+          - labelType = ( obj.target && "TARGET" ) || ( obj.application && allApplications[obj.application] && allApplications[obj.application].type.toUpperCase() );
+          tr
+            td= moment(obj.created.date).format('DD/MM/YYYY HH:mm')
+            td
+              +dressDeviceType(labelType)
+              |  #{labelTo}
+            if obj.payload.length > 50
+                td #{obj.payload.substr(0,50)}[...]
+            else
+                td #{obj.payload}
+            td
+              .btn-group.btn-group-xs
+                a.btn.btn-default(href='/pushes/view/#{obj.id}')
+                  span.glyphicon.glyphicon-eye-open
+                  |  View
+  include ../pagination

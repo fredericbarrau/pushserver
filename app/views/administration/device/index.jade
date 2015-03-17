@@ -1,0 +1,70 @@
+extends ../layout
+
+block admin-content
+    if message
+      div.alert.alert-success= message
+
+    .panel.panel-default
+      //
+         Default panel contents 
+      .panel-heading List all devices
+      .panel-body
+        .input-group
+            a.btn.btn-primary.btn-sm(href='/admin/device/add')
+              span.glyphicon.glyphicon-plus
+              |  Adding a new device
+        form#deviceFilters.form-inline
+          .form-group.form-group-sm.filters
+            label.control-label Filter by :
+            select#inputType.form-control.input-sm(name='type',title="Type filter")
+              option(value="") Any type of app
+              - var selected = false;
+              each appType in ["android","ios"]
+                if type
+                  - selected = (type == appType);
+                option(value=appType,selected=selected)= appType.toUpperCase()
+          .form-group.form-group-sm.filters
+            select#inputApplication.form-control.input-sm(name='application',title="Application filter")
+              option(value="") All applications 
+              - var selected = false;
+              each app in allApplications
+                if application
+                  - selected = (application == app.id);
+                option(value=app.id,selected=selected)= app.name + ' - ' + app.type
+          .form-group.form-group-sm.filters
+            input.form-control(name="name",type="input",placeholder="Search for a name",value=name)
+          .form-group.form-group-sm.filters
+            input.form-control(name="token",type="input",placeholder="Search for a token",value=token)
+          .form-group.form-group-sm.filters
+            input.form-control.btn.btn-primary.input-sm(type="submit",value="Filter")
+          .form-group.form-group-sm.filters
+            input.form-control.btn.btn-primary.input-sm(type="reset",value="Reset")
+      table.table.table-striped.table-bordered
+        thead
+          tr
+            th Name
+            th Type
+            th Application
+            th Action
+        tbody
+          each obj in objs
+            tr
+              td= obj.name
+              td
+                +dressDeviceType(obj.type)
+              td= (allApplications[obj.application]) ? allApplications[obj.application].name : "UNKNOWN APPLICATION"
+              td
+                .btn-group.btn-group-xs
+                  a.btn.btn-default(href='/admin/device/view/#{obj.id}')
+                    span.glyphicon.glyphicon-eye-open
+                    |  View
+                  a.btn.btn-default(href='/admin/device/edit/#{obj.id}')
+                    span.glyphicon.glyphicon-pencil
+                    |  Edit
+                  button.btn.btn-default(href='/api/devices/device/#{obj.id}', data-delete-id=obj.id, data-delete-name=obj.name)
+                    span.glyphicon.glyphicon-trash
+                    |  Delete
+    p.text-right
+      small.text-muted Filtered records : #{itemCount}
+
+    include ../../pagination

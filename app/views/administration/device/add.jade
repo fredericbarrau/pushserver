@@ -1,0 +1,69 @@
+extends ../layout
+
+block admin-content
+  if error && ( error.message || error.err )
+    div.alert.alert-danger
+      strong Error :
+      =error.message
+      =error.err
+      if error.errors
+        ul
+          each msg in error.errors
+            li= msg
+
+  .panel.panel-default
+    //
+       Default panel contents 
+    .panel-heading= title
+    .panel-body
+      .col-xs-8.col-sm-8.col-md-8.col-lg-8
+        .row
+          form.form-horizontal(role='form',method='post')
+            if obj && obj.id
+              .form-group
+                label.col-sm-2.control-label(for='inputName') ID
+                .col-sm-10
+                  input#inputId.form-control(type='text', disabled="disabled" value= obj && obj.id)
+            .form-group(class=error && error.errors && error.errors.name && 'has-error')
+              label.col-sm-2.control-label(for='inputName') Name
+              .col-sm-10
+                input#inputName.form-control(type='text', placeholder='Name', name="name", value= obj && obj.name)
+                p.help-block Name of the device as entered by the device user
+            .form-group(class=error && error.errors && error.errors.type && 'has-error')
+              label.col-sm-2.control-label(for='inputType') Type
+              .col-sm-10
+                if obj
+                  - var typeSelected = obj && obj.type;
+                else
+                  - var typeSelected = false;
+                select#inputType.form-control(name='type')
+                  option(value='') Select a device type
+                  option(value='android',selected=typeSelected == 'android' && 'selected') Android
+                  option(value='ios',selected=typeSelected == 'ios' && 'selected') IOS
+                p.help-block Type of the device between android or ios.
+
+            .form-group(class=error && error.errors && error.errors.token && 'has-error')
+              label.col-sm-2.control-label(for='inputKey') Token
+              .col-sm-10
+                textarea#inputToken.form-control(name='token', rows='3')
+                  =obj && obj.token
+                p.help-block Token uniquely idenfiying this device for the specified application.
+            .form-group(class=error && error.errors && error.errors.applications && 'has-error')
+              label.col-sm-2.control-label(for='inputApplications') Applications
+              .col-sm-10
+                select#inputApplication.form-control(name='application',title="Select an application for this device")
+                  option(value="") Select an application for this device 
+                  - var selected = false;
+                  each app in allApplications
+                    if obj && obj.application
+                      - selected = (obj.application == app.id);
+                    option(value=app.id,selected=selected)= app.name + ' - ' + app.type
+                p.help-block Select the application this target has subscribed to
+            .form-group.ps-submit-group
+              .col-sm-offset-2.col-sm-10
+                a.btn.btn-default(href='/admin/device') Cancel the modifications
+                button.btn.btn-primary(type='submit') Save
+  //
+     panel 
+//
+  row 
