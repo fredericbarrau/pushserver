@@ -457,6 +457,15 @@ Given the previous device example, you can also **exclude** that particular devi
 npm test
 ```
 
+# Dependencies 
+
+* [node-apn](https://github.com/argon/node-apn)
+* [node-gcm](https://github.com/ToothlessGear/node-gcm)
+* [config](http://lorenwest.github.com/node-config)
+* [express](http://expressjs.com/)
+* [mongoose](http://mongoosejs.com)
+* [lodash](https://lodash.com/)
+* [jade](http://jade-lang.com)
 
 # Licence
 Copyright (c) 2014 Frédéric Barrau
