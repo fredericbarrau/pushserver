@@ -9,7 +9,7 @@
       },
       "feedback": {
         "batchFeedback": true,
-        "interval": 43200, //"interval" : 10
+        "interval": 43200,
         "removeUserIfUnreachableSince": 1296000
       }
     },
@@ -27,8 +27,8 @@
     },
     "name": "Push Manager",
     "port": 3002,
-    "bindAddressAPI": "0.0.0.0",
-    "bindAddressGUI": "0.0.0.0",
+    "bindAddressAPI": ["0.0.0.0"],
+    "bindAddressGUI": ["0.0.0.0"],
     "log" : {
         "access" : true
     }
