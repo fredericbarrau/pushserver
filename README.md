@@ -1,17 +1,18 @@
 Pushserver
 ===========================
+[![NPM](https://nodei.co/npm/pushserver.png)](https://nodei.co/npm/pushserver/)
 
 Pushserver is a push management platform for both IOS and Android notifications.
 
 Features : 
 
-* Works as a service (REST API)
 * Manages several applications
-* Offer to regroup several applications as a single target for notifications
+* Allow to regroup several applications as a single target for notifications
 * Send notifications to one application or to several applications at the same time using target
-* Filter the devices you want to notify with custom criteria 
+* Filter the devices you want to notify with custom criteria
 * Testing capabilities : simulate the sending of notifications, send a notification to a single device
-* Simple GUI for configuring applications, targets, viewing the registerd devices, sending notifications and viewing already send notifications
+* Simple GUI for configuring applications & targets, viewing the registered devices, sending notifications and viewing already sent notifications
+* Rest API
 
 ![Image of GUI : push]
 (https://github.com/fredericbarrau/images/blob/master/pushserver/gui-push.jpg)
@@ -26,13 +27,18 @@ Features :
 
 *Prerequisites*
 
-Pushserver uses [mongoDB](http://www.mongodb.org/about/introduction/) to store data. You will have to install a mongo database.
+Pushserver uses [mongoDB](http://www.mongodb.org/about/introduction/) to store data. You will have to install a mongo database (2.4+).
 
 + Using Git
 
 ```shell
 $ git clone 
 $ npm install
+```
+
++ Using Npm
+```shell
+npm install pushserver
 ```
 
 ## Configuration
@@ -206,7 +212,7 @@ Rest-like API. All POST/PUT requests must have a content-type of **application/j
 #### Rest API
 
 Url|Method|Description|Param|Result
---|:--:|--|--|--
+----|:-----:|-----|-----|----
 `/api/applications`|GET|List all the applications||List all the applications
 `/api/applications/application/:id`|GET|Retrieve an application|ID of the application|The application object requested
 `/api/applications/application/`|POST|Create an application|JSON formatted [application object](#application-object)|The application object created
@@ -246,7 +252,7 @@ _Examples :_
 #### Rest API
 
 Url|Method|Description|Param|Result
---|:--:|--|--|--
+----|:-----:|-----|-----|----
 `/api/targets`|GET|List all the targets||List all the targets
 `/api/targets/target/:id`|GET|Retrieve a target|ID of the target|The target object requested
 `/api/targets/target/`|POST|Create a target|JSON formatted [target object](#target-object)|The target object created
@@ -275,7 +281,7 @@ _Example :_
 #### Rest API
 
 Url|Method|Description|Param|Result
---|:--:|--|--|--
+----|:-----:|-----|-----|----
 `/api/devices`|GET|List all the devices||List all the devices
 `/api/devices/device/:id`|GET|Retrieve a device|ID of the device|The device object requested
 `/api/devices/device/`|POST|Register a device for an application|JSON formatted [device object](#device-object)|The device object created
@@ -324,7 +330,7 @@ Just send a PUT/POST request as explained above from your device.
 #### Rest API
 
 Url|Method|Description|Param|Result
---|:--:|--|--|--
+----|:-----:|-----|-----|----
 `/api/pushes`|GET|List all the submitted notifications||Array of all submitted the notifications
 `/api/pushes/push/:id`|GET|Retrieve a push|ID of the push|The [push object](#push-object) requested 
 `/api/pushes/push/`|POST|Create (send) a push|see [Sending a push](#sending-a-push)|The [push object](#push-object) submitted
@@ -445,6 +451,12 @@ Given the previous device example, you can also **exclude** that particular devi
   "customCriteria" : {"userMail":{"$not":"bla@yopmail.com"}}
  }
  ```
+
+## Test
+```
+npm test
+```
+
 
 # Licence
 Copyright (c) 2014 Frédéric Barrau
