@@ -49,7 +49,6 @@ var PushController = function(mongooseModel, pushCon) {
       }
       console.log("Simulated push %j would be send to tokens : ", pushObj, tokens);
       return callback(null, tokens);
-
     });
   };
 

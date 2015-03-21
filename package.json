@@ -1,9 +1,11 @@
 {
   "name": "pushserver",
   "version": "0.4.1",
-  "description": "Pushserver is a push management platform for both IOS and Android notifications. It manages several applications, proposes a REST API and a GUI for administration and testing purpose.",
-  "private": false,
-  "author": "Frédéric Barrau",
+  "description": "",
+  "keyword": "",
+  "licence": "MIT",
+  "private": true,
+  "author": "",
   "scripts": {
     "start": "node ./bin/pushserver",
     "test": "NODE_ENV=test mocha test"
@@ -29,29 +31,5 @@
     "mocha": "^1.21.4",
     "should": "^4.0.4",
     "superagent": "^0.21.0"
-  },
-  "main": "server.js",
-  "directories": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fredericbarrau/pushserver.git"
-  },
-  "keywords": [
-    "pushserver",
-    "apns",
-    "apn",
-    "gcm",
-    "notification",
-    "push",
-    "mobile",
-    "gui",
-    "rest"
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/fredericbarrau/pushserver/issues"
-  },
-  "homepage": "https://github.com/fredericbarrau/pushserver"
+  }
 }

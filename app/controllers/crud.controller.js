@@ -1,12 +1,13 @@
 "use strict";
 //rest.controller.js
 var debug = require('debug')('pushserver:crud.controller'),
-EventEmitter = require('events').EventEmitter,
-util = require('util'),
-_ = require('lodash');
+  EventEmitter = require('events').EventEmitter,
+  util = require('util'),
+  _ = require('lodash');
 
 var CrudController = function(model) {
   this.model = model;
+  this.emberDataCompatible = true;
   this.queryKey = [];
   this.queryDefaultSort = {
     _id: 1
@@ -32,7 +33,8 @@ CrudController.prototype.getCollectionAction = function(query, callback) {
 };
 
 CrudController.prototype._getCollectionActionCallback = function(err, foundObjects, pageCount, itemCount, callback) {
-  var self = this;
+  var self = this,
+    outputData = {};
   if (err) {
     debug(err);
     debug("Did not find object with model : ", self.model.modelName);
@@ -44,11 +46,13 @@ CrudController.prototype._getCollectionActionCallback = function(err, foundObjec
     foundObjects.forEach(function(value, key) {
       foundObjects[key] = self.cleanObject(value);
     });
+    // Formatting data output to be ember-data compatible
+    outputData[self.model._collectionName] = foundObjects;
+    foundObjects = self.emberDataSerialize(foundObjects);
     callback(null, foundObjects, pageCount, itemCount);
   }
   self.emit('getCollectionAction', foundObjects);
 };
-
 
 CrudController.prototype.getAction = function(id, callback) {
   var self = this;
@@ -62,18 +66,19 @@ CrudController.prototype.getAction = function(id, callback) {
       }
     } else if (callback) {
       // removing mongoose interval version number : no need for the user
-      obj = self.cleanObject(obj);
-      self.emit('getAction', obj);
+      obj = self.emberDataSerialize(self.cleanObject(obj));
       callback(null, obj);
     }
+    self.emit('getAction', obj);
   });
 };
 
 CrudController.prototype.postAction = function(obj, callback) {
   var self = this;
+  obj = self.emberDataUnserialize(obj);
   try {
-    obj = self.prepareObject(obj,true);
-  } catch(error) {
+    obj = self.prepareObject(obj, true);
+  } catch (error) {
     return callback(new Error(error));
   }
   self.model.create(obj, function(err, createdObject) {
@@ -86,21 +91,26 @@ CrudController.prototype.postAction = function(obj, callback) {
       }
     } else if (callback) {
       // removing mongoose interval version number : no need for the user
-      createdObject = self.cleanObject(createdObject);
+      createdObject = self.emberDataSerialize(self.cleanObject(createdObject));
       callback(null, createdObject);
-      self.emit('postAction', createdObject);
     }
+    self.emit('postAction', createdObject);
   });
 };
 
-CrudController.prototype.putAction = function(obj, callback) {
+CrudController.prototype.putAction = function(id, obj, callback) {
   var self = this;
+  obj = self.emberDataUnserialize(obj);
   try {
+    if (id) {
+      // use id if provided
+      obj.id = id;
+    }
     var query = self.buildQueryFromObject(obj);
     obj = self.cleanObject(obj);
     try {
-      obj = self.prepareObject(obj,true);
-    } catch(error) {
+      obj = self.prepareObject(obj, true);
+    } catch (error) {
       return callback(new Error(error));
     }
     debug('putAction : searching item to update with citeria : ', obj);
@@ -118,10 +128,10 @@ CrudController.prototype.putAction = function(obj, callback) {
           return callback(err);
         }
       } else if (callback) {
-        createdObject = self.cleanObject(createdObject);
+        createdObject = self.emberDataSerialize(self.cleanObject(createdObject));
         callback(null, createdObject);
-        self.emit('putAction', createdObject);
       }
+      self.emit('putAction', createdObject);
     });
   } catch (err) {
     debug('Could not find object ', obj, ' : ', err.message);
@@ -134,54 +144,49 @@ CrudController.prototype.putAction = function(obj, callback) {
 };
 
 CrudController.prototype.deleteAction = function(id, params, callback) {
-  var self = this, realId =null;
-  
-  
-  
+  var self = this,
+    realId = null;
   try {
     realId = self.model.base.Types.ObjectId(id);
   } catch (err) {
     // id is not an object ID, let's try a query from parameters
-    
-    
     err.message = '_id/id is not an object ID.';
     if (callback) {
       callback(err);
     }
-  }  
-    
-    self.model.findByIdAndRemove(realId, function(err, foundObject) {
-      if (foundObject === null) {
-        debug('Can not find object type ', self.model.modelName, ' for id :', realId);
-        err = new Error('Object not found for deletion : ' + realId);
-      }
-      if (err) {
-        if (callback) {
-          return callback(err);
-        }
-      } else {
-        debug('Object id :', foundObject, ' removed for object type: ', self.model.modelName);
-        if (callback) {
-          foundObject = self.cleanObject(foundObject);
-          callback(null, foundObject);
-          self.emit('deleteAction', foundObject);
-        }
-      }
-    });
+  }
 
+  self.model.findByIdAndRemove(realId, function(err, foundObject) {
+    if (foundObject === null) {
+      debug('Can not find object type ', self.model.modelName, ' for id :', realId);
+      err = new Error('Object not found for deletion : ' + realId);
+    }
+    if (err) {
+      if (callback) {
+        return callback(err);
+      }
+    } else {
+      debug('Object id :', foundObject, ' removed for object type: ', self.model.modelName);
+      if (callback) {
+        foundObject = self.cleanObject(foundObject);
+        callback(null, foundObject);
+        self.emit('deleteAction', foundObject);
+      }
+    }
+  });
 };
 
 CrudController.prototype.buildQueryFromObject = function(object) {
   var self = this,
-  query = null,
-  obj = JSON.parse(JSON.stringify(object)),
-  customQueryCriteria = null;
+    query = null,
+    obj = JSON.parse(JSON.stringify(object)),
+    customQueryCriteria = null;
   debug("Building Query from object : %j", obj);
 
   // handling limit parameter
   if (obj.limit) {
-   delete(obj.limit);
- }
+    delete(obj.limit);
+  }
 
   // handling page parameter
   if (obj.page) {
@@ -231,8 +236,8 @@ CrudController.prototype.buildQueryFromObject = function(object) {
                 "$options": "i"
               };
               break;
-            }
-          });
+          }
+        });
         debug("Overriding operator : %j", customQuery);
       } else {
         // otherwise, the whole object is used, untouched
@@ -259,7 +264,7 @@ CrudController.prototype.buildQueryFromObject = function(object) {
  * @param  {[object]} obj [object to clean]
  * @return {[object]}     [cleaned object]
  */
- CrudController.prototype.cleanObject = function(obj) {
+CrudController.prototype.cleanObject = function(obj) {
   if (obj) {
     obj = JSON.parse(JSON.stringify(obj));
     delete(obj.__v);
@@ -277,8 +282,41 @@ CrudController.prototype.buildQueryFromObject = function(object) {
  * @param {boolean} create : prepare object for creation if true
  * @returns {object}
  */
- CrudController.prototype.prepareObject = function(obj, create) {
+CrudController.prototype.prepareObject = function(obj, create) {
   return obj;
 };
-
+/**
+ * Format data to be ember-data compatible
+ * @param {data} : object [object/array to format]
+ * @return {data/object} [ember-data compatible data]
+ */
+CrudController.prototype.emberDataSerialize = function(data) {
+  var outputData = data;
+  if (this.emberDataCompatible) {
+    if (data instanceof Array) {
+      outputData = {};
+      outputData[this.model._collectionName] = data;
+    } else if (data instanceof Object) {
+      outputData = {};
+      outputData[this.model._objectCollectionName] = data;
+    }
+  }
+  return outputData;
+};
+/**
+ * Retrieve data from ember-data
+ * @param {data} : object [object/array to format]
+ * @return {data/object} [ember-data compatible data]
+ */
+CrudController.prototype.emberDataUnserialize = function(data) {
+  var inputData = data;
+  if (this.emberDataCompatible) {
+    if (data[this.model._collectionName]) {
+      inputData = data[this.model._collectionName];
+    } else if (data[this.model._objectCollectionName]) {
+      inputData = data[this.model._objectCollectionName];
+    }
+  }
+  return inputData;
+};
 module.exports = CrudController;

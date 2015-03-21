@@ -98,7 +98,7 @@ Defaut configuration file contains main configuration
 | apn | Default APN connection options. For more information, see [APN module documentation](https://github.com/argon/node-apn/blob/master/doc/connection.markdown) |
 | gcm | Default GCM connection options. For more information, see [GCM module documentation](https://github.com/ToothlessGear/node-gcm)|
 | bindAddressGUI | Limit the access of the GUI to a single IP address or an array of IPs. Use "0.0.0.0" (as a string, or in the array) for allowing the access from any host (should be avoided in production).|
-| bindAddressAPI | Limit the access of the GUI to a single IP address or an array of IPs. Use "0.0.0.0" (as a string, or in the array) for allowing the access to the API from any host . Note that access to device registration (PUT/POST to api/devices/device see below) is allowed to any IP.|
+| bindAddressAPI | Limit the access of the API to a single IP address or an array of IPs. Use "0.0.0.0" (as a string, or in the array) for allowing the access to the API from any host . Note that access to device registration (PUT/POST to api/devices/device see below) is allowed to any IP.|
 | port | The port used by the push server. |
 
 ## Starting pushserver

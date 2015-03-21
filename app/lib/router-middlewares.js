@@ -105,12 +105,27 @@ var validateAPIContentType = function(req,res,next) {
     next(err);
   }
 };
-
+/**
+ * rather open for now. 
+ * @param  {[type]}   req  [description]
+ * @param  {[type]}   res  [description]
+ * @param  {Function} next [description]
+ * @return {[type]}        [description]
+ */
+var corsEnable = function() {
+  return function(req,res,next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "POST,PUT,GET,HEAD,DELETE");
+    next();
+  };
+};
 
 module.exports = {
   bindAddresses : bindAddresses,
   viewHelpers : viewHelpers,
-  validateAPIContentType: validateAPIContentType
+  validateAPIContentType: validateAPIContentType,
+  corsEnable : corsEnable
 };
 
 

@@ -37,9 +37,10 @@ if (bindAddressAPI) {
 // validating content-type
 router.post("*", middlewares.validateAPIContentType); 
 router.put("*", middlewares.validateAPIContentType);
+// enable cross domain sharing (api endpoint)
+router.use(middlewares.corsEnable());
 
 /* APPLICATION RESTful. */
-
 ['application', 'target', 'device'].forEach(function(item) {
   var controller = null;
   switch (item) {
@@ -62,19 +63,19 @@ router.put("*", middlewares.validateAPIContentType);
     basicRest.getCollection(req, res, next, controller);
   });
 
-  router.get('/' + item + 's/' + item + '/:ID', function(req, res, next) {
+  router.get(['/' + item + 's/:ID','/' + item + 's/' + item + '/:ID'], function(req, res, next) {
     basicRest.get(req, res, next, controller);
   });
 
-  router.delete('/' + item + 's/' + item + '/:ID', function(req, res, next) {
+  router.delete(['/' + item + 's/:ID', '/' + item + 's/' + item + '/:ID'], function(req, res, next) {
     basicRest.delete(req, res, next, controller);
   });
 
-  router.put('/' + item + 's/' + item, function(req, res, next) {
+  router.put([ '/' + item + 's/:ID','/' + item + 's/' + item + '/:ID'], function(req, res, next) {
     basicRest.put(req, res, next, controller);
   });
 
-  router.post(['/' + item + 's/' + item, '/' + item + 's/'], function(req, res, next) {
+  router.post(['/' + item + 's', '/' + item + 's/' + item], function(req, res, next) {
     basicRest.post(req, res, next, controller);
   });
 });
@@ -100,7 +101,7 @@ router.post(['/pushes', '/pushes/push'], function(req, res, next) {
   }
 });
 
-router.get('/pushes/push/:ID/', function(req, res, next) {
+router.get(['/pushes/:ID/','/pushes/push/:ID/'], function(req, res, next) {
   basicRest.get(req, res, next, pushController);
 });
 

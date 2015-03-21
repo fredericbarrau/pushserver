@@ -21,7 +21,6 @@ var rest = {
         } else {
           res.append("TotalItemsCount",objs.length);
         }
-        debug(objs);
         res.json(objs);
       }
     });
@@ -30,12 +29,12 @@ var rest = {
     debug("Params received : %j",req.params);
     debug("Query received : %j",req.query);
     debug("Body received %j", req.body);
-    controller.getAction(req.params.ID, function(err, foundObject) {
+    controller.getAction(req.params.ID, function(err, obj) {
       if (err) {
         debug("Get Error : ", err);
         next(err);
       } else {
-        res.json(foundObject);
+        res.json(obj);
       }
     });
   },
@@ -58,7 +57,7 @@ var rest = {
     debug("Params received : %j",req.params);
     debug("Query received : %j",req.query);
     debug("Body received %j", req.body);
-    controller.putAction(req.body, function(err, obj) {
+    controller.putAction(req.params.ID,req.body, function(err, obj) {
       if (err) {
         debug("Put Error : ", err);
         err.status = 400;
@@ -73,13 +72,13 @@ var rest = {
     debug("Params received : %j",req.params);
     debug("Query received : %j",req.query);
     debug("Body received %j", req.body);
-    controller.deleteAction(req.params.ID, req.body, function(err, obj) {
+    controller.deleteAction(req.params.ID, req.body, function(err) {
       if (err) {
         debug("Delete Error : ", err);
         err.status = 400;
         next(err);
       } else {
-        res.json(obj);
+        res.json({});
       }
     });
   },
