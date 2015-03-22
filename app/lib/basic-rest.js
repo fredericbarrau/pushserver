@@ -14,13 +14,11 @@ var rest = {
         next(err);
       } else {
         debug("Number of Item returned =",itemCount);
-        // adding the number of element in the header
-        if (itemCount) {
-          res.append("TotalItemsCount",itemCount);
-          res.append("PageItemsCount",objs.length);
-        } else {
-          res.append("TotalItemsCount",objs.length);
-        }
+        // adding the number of elements
+        objs.meta = {
+            "total_pages" : pageCount,
+            "total_elements" : itemCount
+        };
         res.json(objs);
       }
     });
