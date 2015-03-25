@@ -198,6 +198,13 @@ CrudController.prototype.buildQueryFromObject = function(object) {
     delete(obj.skip);
   }
 
+  // filtering empty param in the query
+  _.keys(obj).forEach(function(item) {
+    if (obj[item] === '') {
+      delete obj[item];
+    }
+  });
+
   // if a custom query criteria is set, save it for later use
   // then drop it from the object
   if (obj.customQueryCriteria) {
