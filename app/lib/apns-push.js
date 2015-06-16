@@ -5,7 +5,10 @@ var debug = require('debug')('pushserver:apns-push'),
   mongoose = require('mongoose'),
   device = mongoose.model('devices'),
   util = require('util');
-
+/**
+ * [ApnPushManager description]
+ * @param {[type]} app [description]
+ */
 function ApnPushManager(app) {
 
   this.application = app;
@@ -33,10 +36,11 @@ function ApnPushManager(app) {
     this.connectionConf.passphrase = this.application.passphrase;
   }
 
-  //-------------------------------------------------------------------------------------------------------
-  // FEEDBACK Handling
-  //-------------------------------------------------------------------------------------------------------
-
+  /**
+   * [handleFeedback description]
+   * @param  {[type]} feedbackData [description]
+   * @return {[type]}              [description]
+   */
   ApnPushManager.prototype.handleFeedback = function(feedbackData) {
     var time, token,i;
     var now = new Date().getTime(); // UTC timestamp
@@ -56,7 +60,10 @@ function ApnPushManager(app) {
       }
     }
   };
-
+  /**
+   * [feedbackRun description]
+   * @return {[type]} [description]
+   */
   ApnPushManager.prototype.feedbackRun = function() {
     var self = this;
     debug('Openning feedback connection for ', this.application);
@@ -70,7 +77,10 @@ function ApnPushManager(app) {
     this.feedback.on('feedback', function(feedbackData){self.handleFeedback(feedbackData);});
     this.feedback.on('feedbackError', console.error);
   };
-
+  /**
+   * [connect description]
+   * @return {[type]} [description]
+   */
   ApnPushManager.prototype.connect = function() {
     var self = this;
     if (this.application === null) {
@@ -117,7 +127,13 @@ function ApnPushManager(app) {
     this.service.on('socketError', console.error);
   };
 
-  // If you plan on sending identical paylods to many devices you can do something like this.
+  /**
+   * [send description]
+   * @param  {[type]} message [description]
+   * @param  {[type]} custom  [description]
+   * @param  {[type]} tokens  [description]
+   * @return {[type]}         [description]
+   */
   ApnPushManager.prototype.send = function(message, custom, tokens) {
     debug('Sending push with : message = %s message, custom = %j , num tokens = %d', message, custom, tokens.length);
     // connect to apple server, using the app's cred & key
@@ -131,7 +147,10 @@ function ApnPushManager(app) {
     note.sound = "default";
     this.service.pushNotification(note, tokens);
   };
-
+  /**
+   * [disconnect description]
+   * @return {[type]} [description]
+   */
   ApnPushManager.prototype.disconnect =function() {
     this.feedback.cancel();
     this.service.shutdown();

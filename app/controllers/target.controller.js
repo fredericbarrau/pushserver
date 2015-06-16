@@ -4,7 +4,10 @@ var debug = require('debug')('pushserver:target.controller'),
   mongoose = require('mongoose'),
   util = require('util');
 
-
+/**
+ * [TargetController description]
+ * @param {[type]} mongooseModel [description]
+ */
 var TargetController = function(mongooseModel) {
   CrudController.call(this);
   this.model = mongooseModel;

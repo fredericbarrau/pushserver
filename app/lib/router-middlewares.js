@@ -127,5 +127,3 @@ module.exports = {
   validateAPIContentType: validateAPIContentType,
   corsEnable : corsEnable
 };
-
-

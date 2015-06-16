@@ -4,7 +4,10 @@ var debug = require('debug')('pushserver:application.controller'),
   mongoose = require('mongoose'),
   util = require('util'),
   pushConnections = require('../lib/push-connections');
-
+/**
+ * [ApplicationController description]
+ * @param {[type]} mongooseModel [description]
+ */
 var ApplicationController = function(mongooseModel) {
   CrudController.call(this);
   this.model = mongooseModel;
@@ -14,7 +17,9 @@ var ApplicationController = function(mongooseModel) {
 };
 util.inherits(ApplicationController, CrudController);
 
+// Adding listeners
 var app = new ApplicationController(mongoose.model('applications'));
+
 app.addListener('putAction',function(app){
   console.log('Application modified : ' + app.name);
   pushConnections.setConnection(app);

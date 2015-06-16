@@ -7,13 +7,19 @@ var debug = require('debug')('pushserver:gcm-push'),
   _ = require('lodash');
 
 var GCM_BULK_LIMIT = 1000;
-
+/**
+ * [GcmPushManager description]
+ * @param {[type]} app [description]
+ */
 function GcmPushManager(app) {
   this.application = app;
   this.service = null;
   this.connectionConf = JSON.parse(JSON.stringify(config.get('connection')));
   var self = this;
-
+  /**
+   * [connect description]
+   * @return {[type]} [description]
+   */
   GcmPushManager.prototype.connect = function() {
     debug('connecting to GCM platform using ', this.application);
     if (this.application === null) {
@@ -22,7 +28,13 @@ function GcmPushManager(app) {
     this.service = new gcm.Sender(this.application.key);
     debug('connection established to GCM using ', this.service);
   };
-
+  /**
+   * [send description]
+   * @param  {[type]} message [description]
+   * @param  {[type]} custom  [description]
+   * @param  {[type]} tokens  [description]
+   * @return {[type]}         [description]
+   */
   GcmPushManager.prototype.send = function(message, custom, tokens) {
 
     var connectionOptions = this.connectionConf,
@@ -54,7 +66,10 @@ function GcmPushManager(app) {
       });
     }
   };
-
+  /**
+   * [disconnect description]
+   * @return {[type]} [description]
+   */
   GcmPushManager.prototype.disconnect = function() {
     console.log("Disconnected from GCM");
   };

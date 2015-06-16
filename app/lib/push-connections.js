@@ -14,7 +14,10 @@ var util = require('util');
 var PushConnections = function() {
   this.connections = [];
   var self = this;
-
+  /**
+   * [init description]
+   * @return {[type]} [description]
+   */
   PushConnections.prototype.init = function() {
     console.log("Init connections");
     application.find({}, function(err, applications) {
@@ -26,7 +29,10 @@ var PushConnections = function() {
       });
     });
   };
-
+  /**
+   * [setConnection description]
+   * @param {[type]} app [description]
+   */
   PushConnections.prototype.setConnection = function(app) {
     var appID = app._id || app.id;
 
@@ -48,7 +54,11 @@ var PushConnections = function() {
       }
     }
   };
-
+  /**
+   * [removeConnection description]
+   * @param  {[type]} app [description]
+   * @return {[type]}     [description]
+   */
   PushConnections.prototype.removeConnection = function(app) {
     var appID = app._id || app.id;
     if (this.connections[appID]) {
@@ -57,7 +67,11 @@ var PushConnections = function() {
       delete(this.connections[appID]);
     }
   };
-
+  /**
+   * [getConnection description]
+   * @param  {[type]} appId [description]
+   * @return {[type]}       [description]
+   */
   PushConnections.prototype.getConnection = function(appId) {
     return self.connections[appId];
   };

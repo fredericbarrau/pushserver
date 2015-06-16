@@ -1,10 +1,13 @@
 "use strict";
-//rest.controller.js
 var debug = require('debug')('pushserver:crud.controller'),
   EventEmitter = require('events').EventEmitter,
   util = require('util'),
   _ = require('lodash');
 
+/**
+ * [CrudController description]
+ * @param {[type]} model [description]
+ */
 var CrudController = function(model) {
   this.model = model;
   this.emberDataCompatible = true;
@@ -20,6 +23,12 @@ var CrudController = function(model) {
 // CrudController can emit events
 util.inherits(CrudController, EventEmitter);
 
+/**
+ * [getCollectionAction description]
+ * @param  {[type]}   query    [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
 CrudController.prototype.getCollectionAction = function(query, callback) {
   var self = this;
   debug("query = ", query);
@@ -31,7 +40,15 @@ CrudController.prototype.getCollectionAction = function(query, callback) {
     sortBy: self.queryDefaultSort || {}
   });
 };
-
+/**
+ * [_getCollectionActionCallback description]
+ * @param  {[type]}   err          [description]
+ * @param  {[type]}   foundObjects [description]
+ * @param  {[type]}   pageCount    [description]
+ * @param  {[type]}   itemCount    [description]
+ * @param  {Function} callback     [description]
+ * @return {[type]}                [description]
+ */
 CrudController.prototype._getCollectionActionCallback = function(err, foundObjects, pageCount, itemCount, callback) {
   var self = this,
     outputData = {};
@@ -53,7 +70,12 @@ CrudController.prototype._getCollectionActionCallback = function(err, foundObjec
   }
   self.emit('getCollectionAction', foundObjects);
 };
-
+/**
+ * [getAction description]
+ * @param  {[type]}   id       [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
 CrudController.prototype.getAction = function(id, callback) {
   var self = this;
   self.model.findById(id, function(err, obj) {
@@ -72,7 +94,12 @@ CrudController.prototype.getAction = function(id, callback) {
     self.emit('getAction', obj);
   });
 };
-
+/**
+ * [postAction description]
+ * @param  {[type]}   obj      [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
 CrudController.prototype.postAction = function(obj, callback) {
   var self = this;
   obj = self.emberDataUnserialize(obj);
@@ -91,13 +118,20 @@ CrudController.prototype.postAction = function(obj, callback) {
       }
     } else if (callback) {
       // removing mongoose interval version number : no need for the user
+      // + ember data formatting if needed
       createdObject = self.emberDataSerialize(self.cleanObject(createdObject));
       callback(null, createdObject);
     }
     self.emit('postAction', createdObject);
   });
 };
-
+/**
+ * [putAction description]
+ * @param  {[type]}   id       [description]
+ * @param  {[type]}   obj      [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
 CrudController.prototype.putAction = function(id, obj, callback) {
   var self = this;
   obj = self.emberDataUnserialize(obj);
@@ -142,7 +176,13 @@ CrudController.prototype.putAction = function(id, obj, callback) {
     }
   }
 };
-
+/**
+ * [deleteAction description]
+ * @param  {[type]}   id       [description]
+ * @param  {[type]}   params   [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
 CrudController.prototype.deleteAction = function(id, params, callback) {
   var self = this,
     realId = null;
@@ -175,7 +215,11 @@ CrudController.prototype.deleteAction = function(id, params, callback) {
     }
   });
 };
-
+/**
+ * [buildQueryFromObject description]
+ * @param  {[type]} object [description]
+ * @return {[type]}        [description]
+ */
 CrudController.prototype.buildQueryFromObject = function(object) {
   var self = this,
     query = null,

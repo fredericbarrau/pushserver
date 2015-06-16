@@ -3,7 +3,10 @@ var debug = require('debug')('pushserver:device.controller'),
   CrudController = require('./crud.controller'),
   mongoose = require('mongoose'),
   util = require('util');
-
+/**
+ * [DeviceController description]
+ * @param {[type]} mongooseModel [description]
+ */
 var DeviceController = function(mongooseModel) {
   CrudController.call(this);
   this.model = mongooseModel;

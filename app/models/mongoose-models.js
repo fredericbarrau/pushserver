@@ -169,8 +169,8 @@ mongoose.model(collectionsName.target, targetSchema)["_objectCollectionName"] = 
 mongoose.model(collectionsName.target, targetSchema)["_collectionName"] = 'targets';
 mongoose.model(collectionsName.device, deviceSchema)["_objectCollectionName"] = 'device';
 mongoose.model(collectionsName.device, deviceSchema)["_collectionName"] = 'devices';
-mongoose.model(collectionsName.push,  pushSchema)["_objectCollectionName"] = 'push';
-mongoose.model(collectionsName.push,  pushSchema)["_collectionName"] = 'pushes';
+mongoose.model(collectionsName.push, pushSchema)["_objectCollectionName"] = 'push';
+mongoose.model(collectionsName.push, pushSchema)["_collectionName"] = 'pushes';
 
 module.exports = {
   models: {

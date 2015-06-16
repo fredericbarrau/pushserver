@@ -5,10 +5,8 @@ var debug = require('debug')('pushserver:webservices'),
   router = express.Router(),
   config = require('config').get('pushserver'),
   middlewares = require('../lib/router-middlewares'),
-  
   // WORKER
   apnsPushManager = require('./../lib/apns-push'),
-
   basicRest = require('./../lib/basic-rest'),
   pushConnections = require('./../lib/push-connections'),
   // CONTROLLERS
