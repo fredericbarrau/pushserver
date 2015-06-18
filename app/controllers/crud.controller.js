@@ -135,15 +135,11 @@ CrudController.prototype.putAction = function(obj, callback) {
 
 CrudController.prototype.deleteAction = function(id, params, callback) {
   var self = this, realId =null;
-  
-  
-  
+ 
   try {
     realId = self.model.base.Types.ObjectId(id);
   } catch (err) {
     // id is not an object ID, let's try a query from parameters
-    
-    
     err.message = '_id/id is not an object ID.';
     if (callback) {
       callback(err);
