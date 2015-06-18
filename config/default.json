@@ -22,7 +22,7 @@
       },
       "messageOptions": {
         "delayWhileIdle": true,
-        "timeToLive": 3
+        "timeToLive": 86400
       }
     },
     "name": "Push Manager",
