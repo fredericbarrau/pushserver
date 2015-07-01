@@ -55,7 +55,7 @@ var PushController = function(mongooseModel, pushCon) {
 
   PushController.prototype.queryDevicesToPush = function(deviceQuery, pushObj, callback) {
     // saving query for device
-    var Device = db.models.device.find(deviceQuery).toConstructor(),
+    var Device = db.models.device.find(deviceQuery, {"token":1,"_id":0}).toConstructor(),
       device = new Device(),
       customCriteria = {};
     try {
@@ -63,7 +63,7 @@ var PushController = function(mongooseModel, pushCon) {
       if (typeof pushObj.customCriteria === "string" && pushObj.customCriteria !== "") {
         customCriteria = JSON.parse(pushObj.customCriteria);
       }
-      device = device.find(customCriteria || {}, "token");
+      device = device.find(customCriteria || {});
 
       //querying the model
       device.exec(function(err, dev) {
@@ -95,7 +95,7 @@ var PushController = function(mongooseModel, pushCon) {
       counter = 0;
 
     if (!err) {
-      // Too step loop to avoid a callback race condition for updating the push record
+      // Two step loop to avoid a callback race condition for updating the push record
       // loop for retrieving the service connection and filtering the disabled app
       tokensCollection.forEach(function(item, index) {
         debug("Target mode : handling application %s",item.application);
@@ -225,7 +225,7 @@ var PushController = function(mongooseModel, pushCon) {
         application: pushObj.application
       }, pushObj, function(err, tokens) {
         if (err) {
-          console.error("Error while sending push : %j - %s", pushObj, err.message);
+          console.error("Error while sending push : " + err.message);
           return callback(err);
         }
         pushTokens = [{

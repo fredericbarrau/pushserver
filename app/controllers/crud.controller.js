@@ -24,10 +24,8 @@ CrudController.prototype.getCollectionAction = function(query, callback) {
   debug("query = ", query);
   var mongoQuery = self.buildQueryFromObject(query);
   // paginated results
-  self.model.paginate(mongoQuery || {}, query.page || 1, query.limit || 0, function(err, pageCount, objs, itemCount) {
+  self.model.paginate(mongoQuery || {}, { page : query.page || 1, limit : query.limit || 0, sortBy: self.queryDefaultSort || {} }, function(err, objs,pageCount, itemCount) {
     self._getCollectionActionCallback(err, objs, pageCount, itemCount, callback);
-  }, {
-    sortBy: self.queryDefaultSort || {}
   });
 };
 
@@ -135,7 +133,7 @@ CrudController.prototype.putAction = function(obj, callback) {
 
 CrudController.prototype.deleteAction = function(id, params, callback) {
   var self = this, realId =null;
- 
+  
   try {
     realId = self.model.base.Types.ObjectId(id);
   } catch (err) {
@@ -145,25 +143,25 @@ CrudController.prototype.deleteAction = function(id, params, callback) {
       callback(err);
     }
   }  
-    
-    self.model.findByIdAndRemove(realId, function(err, foundObject) {
-      if (foundObject === null) {
-        debug('Can not find object type ', self.model.modelName, ' for id :', realId);
-        err = new Error('Object not found for deletion : ' + realId);
+  
+  self.model.findByIdAndRemove(realId, function(err, foundObject) {
+    if (foundObject === null) {
+      debug('Can not find object type ', self.model.modelName, ' for id :', realId);
+      err = new Error('Object not found for deletion : ' + realId);
+    }
+    if (err) {
+      if (callback) {
+        return callback(err);
       }
-      if (err) {
-        if (callback) {
-          return callback(err);
-        }
-      } else {
-        debug('Object id :', foundObject, ' removed for object type: ', self.model.modelName);
-        if (callback) {
-          foundObject = self.cleanObject(foundObject);
-          callback(null, foundObject);
-          self.emit('deleteAction', foundObject);
-        }
+    } else {
+      debug('Object id :', foundObject, ' removed for object type: ', self.model.modelName);
+      if (callback) {
+        foundObject = self.cleanObject(foundObject);
+        callback(null, foundObject);
+        self.emit('deleteAction', foundObject);
       }
-    });
+    }
+  });
 
 };
 

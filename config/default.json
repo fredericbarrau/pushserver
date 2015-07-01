@@ -14,7 +14,8 @@
       }
     },
     "dbConfig": {
-      "connectionUrl": "mongodb://localhost/pushserver"
+      "connectionUrl": "mongodb://localhost/pushserver",
+      "concurrencyLimit" : 50
     },
     "gcm": {
       "connection": {
@@ -22,7 +23,8 @@
       },
       "messageOptions": {
         "delayWhileIdle": true,
-        "timeToLive": 86400
+        "timeToLive": 86400,
+        "dryRun" : false
       }
     },
     "name": "Push Manager",

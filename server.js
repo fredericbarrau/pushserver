@@ -1,5 +1,6 @@
 "use strict";
 var
+  Promise = require("bluebird"),
   debug = require('debug')('pushserver:server'),
   express = require('express'),
   fs = require('fs'),
@@ -12,6 +13,8 @@ var
   config = require('config').get('pushserver'),
   paginate = require('express-paginate'),
   server = express();
+
+Promise.promisifyAll(require('mongoose'));
 
 //loading plugins
 //var plugins = require('./app/plugins');

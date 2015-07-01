@@ -6,7 +6,7 @@
       - var maxPage = ((pageCount - page) > 5)?(page+5):pageCount;
       - if (i<=0) i=1;
       - if (maxPage<=0) maxPage = pageCount;
-      ul.pagination
+      ul.pagination.pagination-sm
         li
           a(href=paginate.href({"page":1})) &lt;&lt;
         if paginate.hasPreviousPages
@@ -32,7 +32,7 @@
         li
           a(href=paginate.href({"page":pageCount})) &gt;&gt;
   .col-xs-4.col-sm-4.col-md-4.col-lg-4
-    .pagination
+    .pagination.pagination-sm
       small.text-muted Items per page 
       .btn-group.btn-group-sm(role=group)
         a.btn.btn-default(href=paginate.href({"page":page,limit:10})) 10

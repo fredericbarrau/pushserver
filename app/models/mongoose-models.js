@@ -65,7 +65,8 @@ var targetSchema = new mongoose.Schema({
 var deviceSchema = new mongoose.Schema({
   token: {
     type: String,
-    required: true
+    required: true,
+    index: true,
   },
   application: {
     type: mongoose.Schema.Types.ObjectId,

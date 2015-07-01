@@ -81,7 +81,7 @@ var bindAddresses = function(bindIps) {
       return next();
     } else {
       // not allowed
-      var err = new Error('GUI Not Allowed for your IP.');
+      var err = new Error('GUI Not Allowed for IP : ' +req.ip);
       err.status = 403;
       return next(err);
     }
