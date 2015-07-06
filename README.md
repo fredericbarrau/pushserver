@@ -466,6 +466,9 @@ npm test
 * [lodash](https://lodash.com/)
 * [jade](http://jade-lang.com)
 
+
+This project was widely inspired by [node-pushserver](https://github.com/Smile-SA/node-pushserver). Thanks to them for sharing it.
+
 # Licence
 Copyright (c) 2014 Frédéric Barrau
 
