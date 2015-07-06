@@ -62,9 +62,8 @@ Defaut configuration file contains main configuration
   "pushserver": {
     "dbConfig": {
       "connectionUrl": "mongodb://localhost/pushserver",
-      "type": "mongodb"
+      "concurrencyLimit" : 50
     },
-
     "apn": {
       "connection": {
         "cacheLength" : 5000,
@@ -72,7 +71,7 @@ Defaut configuration file contains main configuration
       },
       "feedback": {
         "batchFeedback": true,
-        "interval" : 43200 //"interval" : 10
+        "interval" : 43200
       }
     },
     "gcm": {
@@ -81,8 +80,7 @@ Defaut configuration file contains main configuration
       },
       "messageOptions" : {
         "delayWhileIdle" : true,
-        "timeToLive" : 3
-        //"dryRun" : true
+        "timeToLive" : 86400
       }
     },
     "name": "Push Manager",
@@ -95,6 +93,7 @@ Defaut configuration file contains main configuration
 |**Parameter**|**Description**|
 |----------|-----------------------|
 | dbConfig | database configuration. MongoDB is the only database supported for now. Connexion url uses the default mongodb url format.|
+| dbConfig.concurrencyLimit | Maximum number of simultaneous queries to mongoDB used to process bulk operations (APNS feedback, GCM response). Consider raising it _only_ if your GCM /APNS feedback response takes ages to be processed AND your mongoDB is robust enough to handle the load. May crush your mongo server, use with extreme caution (bench & measure first). | 
 | apn | Default APN connection options. For more information, see [APN module documentation](https://github.com/argon/node-apn/blob/master/doc/connection.markdown) |
 | gcm | Default GCM connection options. For more information, see [GCM module documentation](https://github.com/ToothlessGear/node-gcm)|
 | bindAddressGUI | Limit the access of the GUI to a single IP address or an array of IPs. Use "0.0.0.0" (as a string, or in the array) for allowing the access from any host (should be avoided in production).|

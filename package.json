@@ -1,15 +1,17 @@
 {
   "name": "pushserver",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Pushserver is a push management platform for both IOS and Android notifications. It manages several applications, proposes a REST API and a GUI for administration and testing purpose.",
   "private": false,
   "author": "Frédéric Barrau",
   "scripts": {
     "start": "node ./bin/pushserver",
-    "test": "NODE_ENV=test mocha test"
+    "test": "NODE_ENV=test mocha test",
+    "debug": "node-debug --debug-brk ./bin/pushserver"
   },
   "dependencies": {
     "apn": "^1.7.3",
+    "bluebird": "^2.9.30",
     "body-parser": "^1.6.7",
     "config": "^1.1.0",
     "debug": "~1.0.4",
@@ -21,9 +23,9 @@
     "marked": "^0.3.2",
     "moment": "^2.8.4",
     "mongoose": "~3.8.0",
-    "mongoose-paginate": "https://github.com/edwardhotchkiss/mongoose-paginate/archive/3.1.3.tar.gz",
+    "mongoose-paginate": "^3.1.6",
     "morgan": "^1.2.3",
-    "node-gcm": "^0.9.12"
+    "node-gcm": "^0.9.15"
   },
   "devDependencies": {
     "mocha": "^1.21.4",

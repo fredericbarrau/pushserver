@@ -5,16 +5,16 @@ var
   express = require('express'),
   config = require('config').get('pushserver'),
   pushController = require('../controllers/push.controller'),
-  middlewares =  require('../lib/router-middlewares.js'),
+  middlewares = require('../lib/router-middlewares.js'),
   _ = require('lodash'),
   router = express.Router();
-  
+
 /**
-* Cleaning query for paginated views
-* Removing unecessary elements from the query (page,skip,limit) and empty parameters
-* @param  {[type]} query [description]
-* @return {[type]}       [description]
-*/
+ * Cleaning query for paginated views
+ * Removing unecessary elements from the query (page,skip,limit) and empty parameters
+ * @param  {[type]} query [description]
+ * @return {[type]}       [description]
+ */
 var filterQuery = function(query) {
   var cleanQuery = JSON.parse(JSON.stringify(query));
   // filtering empty param in the query, might crash the search
@@ -67,7 +67,11 @@ var controllers = [];
   router.get('/admin/' + item, function(req, res, next) {
     debug('Listing items for ', item);
     // pagination + search
-    controller.model.paginate(controller.buildQueryFromObject(filterQuery(req.query)), req.query.page, req.query.limit, function(err, pageCount, objs, itemCount) {
+    controller.model.paginate(controller.buildQueryFromObject(filterQuery(req.query)), {
+      page: req.query.page,
+      limit: req.query.limit,
+      sortBy:  controller.queryDefaultSort
+    }, function(err, objs, pageCount, itemCount) {
       if (err) {
         next(err);
       } else {
@@ -79,8 +83,6 @@ var controllers = [];
         debug("render params for view : ", renderParams);
         res.render('administration/' + item + '/index', renderParams);
       }
-    }, {
-      sortBy: controller.queryDefaultSort
     });
   });
 
@@ -170,7 +172,13 @@ router.get(['/push'], function(req, res) {
 
 router.get('/pushes', function(req, res, next) {
   debug('Listing items for pushes');
-  pushController.model.paginate(pushController.buildQueryFromObject(filterQuery(req.query)), req.query.page, req.query.limit, function(err, pageCount, objs, itemCount) {
+  pushController.model.paginate(pushController.buildQueryFromObject(filterQuery(req.query)), {
+    page: req.query.page,
+    limit: req.query.limit,
+    sortBy: {
+      "created.t": -1
+    }
+  }, function(err, objs, pageCount, itemCount) {
     if (err) {
       next(err);
     } else {
@@ -182,10 +190,6 @@ router.get('/pushes', function(req, res, next) {
         'itemCount': itemCount
       };
       res.render('push/index', renderParams);
-    }
-  }, {
-    sortBy: {
-      "created.t": -1
     }
   });
 });
