@@ -222,7 +222,7 @@ describe('Rest API', function() {
        * @param  {Function} done [description]
        * @return {[type]}        [description]
        */
-      it("- should GET collection", function(done) {
+      it("- should GET application collection", function(done) {
         superagent.get(global.serverUrl + '/api/applications')
           .send()
           .end(function(err, res) {
@@ -232,6 +232,46 @@ describe('Rest API', function() {
             } else {
               res.statusCode.should.equal(200);
               res.body.length.should.be.ok.and.be.exactly(2);
+              done();
+            }
+          });
+      });
+      /**
+       * Retrieving a collection of previously inserted objects with limit
+       * @param  {Function} done [description]
+       * @return {[type]}        [description]
+       */
+      it("- should GET application collection (with limit)", function(done) {
+        superagent.get(global.serverUrl + '/api/applications?limit=1')
+          .send()
+          .end(function(err, res) {
+            if (err) {
+              console.error(err.message);
+              done(err);
+            } else {
+              res.statusCode.should.equal(200);
+              res.body.length.should.be.ok.and.be.exactly(1);
+              done();
+            }
+          });
+      });
+      /**
+       * Retrieving a collection of previously inserted objects with limit and offset
+       * @param  {Function} done [description]
+       * @return {[type]}        [description]
+       */
+      it("- should GET application collection (with limit and page)", function(done) {
+        superagent.get(global.serverUrl + '/api/applications?limit=1&page=1')
+          .send()
+          .end(function(err, res) {
+            if (err) {
+              console.error(err.message);
+              done(err);
+            } else {
+              res.statusCode.should.equal(200);
+              res.body.length.should.be.ok.and.be.exactly(1);
+              checkAppProp(res.body[0]);
+              currentApp.id.should.equal(res.body[0].id); 
               done();
             }
           });
@@ -449,7 +489,7 @@ describe('Rest API', function() {
        * @param  {Function} done [description]
        * @return {[type]}        [description]
        */
-      it("- should GET collection", function(done) {
+      it("- should GET target collection", function(done) {
         superagent.get(global.serverUrl + '/api/targets')
           .send()
           .end(function(err, res) {
@@ -459,6 +499,46 @@ describe('Rest API', function() {
             } else {
               res.statusCode.should.equal(200);
               res.body.length.should.be.ok.and.be.exactly(2);
+              done();
+            }
+          });
+      });
+      /**
+       * Retrieving a collection of previously inserted objects with limit
+       * @param  {Function} done [description]
+       * @return {[type]}        [description]
+       */
+      it("- should GET target collection (with limit)", function(done) {
+        superagent.get(global.serverUrl + '/api/targets?limit=1')
+          .send()
+          .end(function(err, res) {
+            if (err) {
+              console.error(err.message);
+              done(err);
+            } else {
+              res.statusCode.should.equal(200);
+              res.body.length.should.be.ok.and.be.exactly(1);
+              done();
+            }
+          });
+      });
+      /**
+       * Retrieving a collection of previously inserted objects with limit and page
+       * @param  {Function} done [description]
+       * @return {[type]}        [description]
+       */
+      it("- should GET target collection (with limit and page)", function(done) {
+        superagent.get(global.serverUrl + '/api/targets?limit=1&page=1')
+          .send()
+          .end(function(err, res) {
+            if (err) {
+              console.error(err.message);
+              done(err);
+            } else {
+              res.statusCode.should.equal(200);
+              res.body.length.should.be.ok.and.be.exactly(1);
+              checkTargetProp(res.body[0]);
+              currentTarget.id.should.equal(res.body[0].id);
               done();
             }
           });
@@ -675,7 +755,7 @@ describe('Rest API', function() {
        * @param  {Function} done [description]
        * @return {[type]}        [description]
        */
-      it("- should GET collection", function(done) {
+      it("- should GET devices collection", function(done) {
         superagent.get(global.serverUrl + '/api/devices')
           .send()
           .end(function(err, res) {
@@ -689,6 +769,46 @@ describe('Rest API', function() {
             }
           });
       });
+      /**
+       * Retrieving a collection of previously inserted objects with limit
+       * @param  {Function} done [description]
+       * @return {[type]}        [description]
+       */
+      it("- should GET devices collection (with limit)", function(done) {
+        superagent.get(global.serverUrl + '/api/devices?limit=2')
+          .send()
+          .end(function(err, res) {
+            if (err) {
+              console.error(err.message);
+              done(err);
+            } else {
+              res.statusCode.should.equal(200);
+              res.body.length.should.be.ok.and.be.exactly(2);
+              done();
+            }
+          });
+      });
+      /**
+       * Retrieving a collection of previously inserted objects with limit and page
+       * @param  {Function} done [description]
+       * @return {[type]}        [description]
+       */
+      it("- should GET devices collection (with limit and page)", function(done) {
+        superagent.get(global.serverUrl + '/api/devices?limit=2&page=2')
+          .send()
+          .end(function(err, res) {
+            if (err) {
+              console.error(err.message);
+              done(err);
+            } else {
+              res.statusCode.should.equal(200);
+              res.body.length.should.be.ok.and.be.exactly(1);
+              checkDeviceProp(res.body[0]);
+              currentDevice.id.should.equal(res.body[0].id);
+              done();
+            }
+          });
+      }); 
       /**
        * Deleting an object using its ID
        * @param  {Function} done [description]

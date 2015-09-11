@@ -126,7 +126,8 @@ describe("Push API", function() {
       });
   });
   it("- should have devices loaded", function(done) {
-    superagent.get(global.serverUrl + "/api/devices")
+    // more than 10 devices loaded (the limit) : disabling limit
+    superagent.get(global.serverUrl + "/api/devices?limit=0")
       .send()
       .end(function(err, res) {
         if (err) {
