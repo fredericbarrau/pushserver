@@ -36,7 +36,7 @@ block push-content
                   option(value=0) Select a target
                   each target in allTargets
                     option(value=target.id)= target.name
-                p.help-block Target to send to the push to.
+                p.help-block Target to send the push to.
                  
             #applicationBlock.form-group(class=error && error.errors && error.errors.type && 'has-error',style="display:none")
               label.col-sm-2.control-label(for='inputApplication') Application
@@ -46,13 +46,13 @@ block push-content
                   each application in allApplications
                     if application.enabled === true
                       option(value=application.id)= application.name + ' - ' + application.type
-                p.help-block Application to send to the push to.
+                p.help-block Application to send the push to.
 
             #deviceBlock.form-group(class=error && error.errors && error.errors.device && 'has-error',style="display:none")
               label.col-sm-2.control-label(for='inputDevice') Device
               .col-sm-10
                 select#inputDevice.form-control(name="device")
-                p.help-block Device to send to the push to.
+                p.help-block Device to send the push to.
 
             .form-group(class=error && error.errors && error.errors.payload && 'has-error')
               label.col-sm-2.control-label(for='inputPayload') Payload
