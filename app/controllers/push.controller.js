@@ -47,9 +47,9 @@ var PushController = function(mongooseModel, pushCon) {
         console.error("Unable to simulate the sending of push for obj %j  : %s", pushObj, err.message);
         return callback(err);
       }
-      console.log("Simulated push %j would be send to tokens : ", pushObj, tokens);
+      debug("Simulated push %j would be send to tokens : ", pushObj, tokens);
+      console.log("Simulated push would be sent to %d tokens",tokens.length);
       return callback(null, tokens);
-
     });
   };
 
