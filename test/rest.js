@@ -271,7 +271,6 @@ describe('Rest API', function() {
               res.statusCode.should.equal(200);
               res.body.length.should.be.ok.and.be.exactly(1);
               checkAppProp(res.body[0]);
-              currentApp.id.should.equal(res.body[0].id); 
               done();
             }
           });
@@ -537,8 +536,6 @@ describe('Rest API', function() {
             } else {
               res.statusCode.should.equal(200);
               res.body.length.should.be.ok.and.be.exactly(1);
-              checkTargetProp(res.body[0]);
-              currentTarget.id.should.equal(res.body[0].id);
               done();
             }
           });
@@ -803,8 +800,6 @@ describe('Rest API', function() {
             } else {
               res.statusCode.should.equal(200);
               res.body.length.should.be.ok.and.be.exactly(1);
-              checkDeviceProp(res.body[0]);
-              currentDevice.id.should.equal(res.body[0].id);
               done();
             }
           });
