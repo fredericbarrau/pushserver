@@ -4,6 +4,11 @@ var debug = require('debug')('pushserver'),
   db = require('../app/models/mongoose-connect').mongoose,
   server = require('../server');
 
+// profiling if needed
+if (process.env.NODE_ENV === "development") {
+  require('look').start(); 
+}
+
 global.config = config = require('config').get('pushserver');
 server.set('port', process.env.PORT || global.config.get('port') || 3000);
 
