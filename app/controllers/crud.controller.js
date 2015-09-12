@@ -245,6 +245,9 @@ CrudController.prototype.buildQueryFromObject = function(object) {
     debug("Adding custom criteria : ", customQueryCriteria);
     query = query.find(customQueryCriteria);
   }
+  // add the lean mongoose param : we don't need mongoose fuzzy stuff, just plain Javascript object
+  // see https://groups.google.com/forum/#!topic/mongoose-orm/u2_DzDydcnA/discussion
+  query = query.lean();
   return query;
 };
 

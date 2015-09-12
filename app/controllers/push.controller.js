@@ -44,11 +44,11 @@ var PushController = function(mongooseModel, pushCon) {
     }
     self.sendPush(obj, function(err, pushObj, payload, tokens) {
       if (err) {
-        console.error("Unable to simulate the sending of push for obj %j  : %s", pushObj, err.message);
+        console.error("Unable to simulate the sending of push for obj %j : %s", pushObj, err.message);
         return callback(err);
       }
-      debug("Simulated push %j would be send to tokens : ", pushObj, tokens);
-      console.log("Simulated push would be sent to %d tokens",tokens.length);
+      debug("Simulated push %j would be send to tokens : %j", pushObj, tokens);
+      console.log("Simulated push have been sent");
       return callback(null, tokens);
     });
   };
@@ -63,7 +63,10 @@ var PushController = function(mongooseModel, pushCon) {
       if (typeof pushObj.customCriteria === "string" && pushObj.customCriteria !== "") {
         customCriteria = JSON.parse(pushObj.customCriteria);
       }
-      device = device.find(customCriteria || {});
+
+      // Fixing issue#6 using the lean mongoose param 
+      // https://groups.google.com/forum/#!topic/mongoose-orm/u2_DzDydcnA/discussion
+      device = device.find(customCriteria || {}).lean(true);
 
       //querying the model
       device.exec(function(err, dev) {
@@ -96,6 +99,7 @@ var PushController = function(mongooseModel, pushCon) {
 
     if (!err) {
       // Two step loop to avoid a callback race condition for updating the push record
+      // (Promise would be a better option though...)
       // loop for retrieving the service connection and filtering the disabled app
       tokensCollection.forEach(function(item, index) {
         debug("Target mode : handling application %s",item.application);
