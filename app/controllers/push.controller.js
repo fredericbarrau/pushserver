@@ -58,6 +58,7 @@ var PushController = function(mongooseModel, pushCon) {
     var Device = db.models.device.find(deviceQuery, {"token":1,"_id":0}).toConstructor(),
       device = new Device(),
       customCriteria = {};
+
     try {
       // further filtering using the customCriteria, if any
       if (typeof pushObj.customCriteria === "string" && pushObj.customCriteria !== "") {
@@ -66,7 +67,8 @@ var PushController = function(mongooseModel, pushCon) {
 
       // Fixing issue#6 using the lean mongoose param 
       // https://groups.google.com/forum/#!topic/mongoose-orm/u2_DzDydcnA/discussion
-      device = device.find(customCriteria || {}).lean(true);
+      debug("Device query for push using batchSize = " + self.configBatchSize );
+      device = device.find(customCriteria || {}).batchSize(self.configBatchSize).lean(true);
 
       //querying the model
       device.exec(function(err, dev) {
@@ -82,7 +84,8 @@ var PushController = function(mongooseModel, pushCon) {
 
       });
     } catch (err) {
-      return callback(new Error("Invalid custom criteria : not JSON"));
+      return callback(err);
+      //return callback(new Error("Invalid custom criteria : not JSON"));
     }
   };
   /**

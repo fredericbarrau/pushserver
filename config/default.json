@@ -15,7 +15,8 @@
     },
     "dbConfig": {
       "connectionUrl": "mongodb://localhost/pushserver",
-      "concurrencyLimit" : 50
+      "concurrencyLimit" : 50,
+      "batchSize" : 100000
     },
     "gcm": {
       "connection": {

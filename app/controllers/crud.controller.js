@@ -3,8 +3,12 @@
 var debug = require('debug')('pushserver:crud.controller'),
 EventEmitter = require('events').EventEmitter,
 util = require('util'),
+config = require('config').get('pushserver'),
 _ = require('lodash');
-
+/**
+ * [CrudController description]
+ * @param {[type]} model [description]
+ */
 var CrudController = function(model) {
   this.model = model;
   this.queryKey = [];
@@ -15,10 +19,20 @@ var CrudController = function(model) {
   this.querySearchOperatorOverride = {
     "name": "$regex"
   };
+  // batchSize 
+  this.configBatchSize = 100000;
+  try {
+    this.configBatchSize = config.get("dbConfig").get("batchSize");
+  } catch (err) {}
 };
 // CrudController can emit events
 util.inherits(CrudController, EventEmitter);
-
+/**
+ * [getCollectionAction description]
+ * @param  {[type]}   query    [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
 CrudController.prototype.getCollectionAction = function(query, callback) {
   var self = this;
   debug("query = ", query);
@@ -28,7 +42,15 @@ CrudController.prototype.getCollectionAction = function(query, callback) {
     self._getCollectionActionCallback(err, objs, pageCount, itemCount, callback);
   });
 };
-
+/**
+ * [_getCollectionActionCallback description]
+ * @param  {[type]}   err          [description]
+ * @param  {[type]}   foundObjects [description]
+ * @param  {[type]}   pageCount    [description]
+ * @param  {[type]}   itemCount    [description]
+ * @param  {Function} callback     [description]
+ * @return {[type]}                [description]
+ */
 CrudController.prototype._getCollectionActionCallback = function(err, foundObjects, pageCount, itemCount, callback) {
   var self = this;
   if (err) {
@@ -47,7 +69,12 @@ CrudController.prototype._getCollectionActionCallback = function(err, foundObjec
   self.emit('getCollectionAction', foundObjects);
 };
 
-
+/**
+ * [getAction description]
+ * @param  {[type]}   id       [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
 CrudController.prototype.getAction = function(id, callback) {
   var self = this;
   self.model.findById(id, function(err, obj) {
@@ -66,7 +93,12 @@ CrudController.prototype.getAction = function(id, callback) {
     }
   });
 };
-
+/**
+ * [postAction description]
+ * @param  {[type]}   obj      [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
 CrudController.prototype.postAction = function(obj, callback) {
   var self = this;
   try {
@@ -90,7 +122,12 @@ CrudController.prototype.postAction = function(obj, callback) {
     }
   });
 };
-
+/**
+ * [putAction description]
+ * @param  {[type]}   obj      [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
 CrudController.prototype.putAction = function(obj, callback) {
   var self = this;
   try {
@@ -130,7 +167,13 @@ CrudController.prototype.putAction = function(obj, callback) {
     }
   }
 };
-
+/**
+ * [deleteAction description]
+ * @param  {[type]}   id       [description]
+ * @param  {[type]}   params   [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
 CrudController.prototype.deleteAction = function(id, params, callback) {
   var self = this, realId =null;
   
@@ -164,7 +207,11 @@ CrudController.prototype.deleteAction = function(id, params, callback) {
   });
 
 };
-
+/**
+ * [buildQueryFromObject description]
+ * @param  {[type]} object [description]
+ * @return {[type]}        [description]
+ */
 CrudController.prototype.buildQueryFromObject = function(object) {
   var self = this,
   query = null,
@@ -247,7 +294,9 @@ CrudController.prototype.buildQueryFromObject = function(object) {
   }
   // add the lean mongoose param : we don't need mongoose fuzzy stuff, just plain Javascript object
   // see https://groups.google.com/forum/#!topic/mongoose-orm/u2_DzDydcnA/discussion
-  query = query.lean();
+  // using the batch size in order to improve big data set (devices mainly)
+  debug("Querying using batchSize = " + self.configBatchSize);
+  query = query.batchSize(self.configBatchSize).lean(true);
   return query;
 };
 
