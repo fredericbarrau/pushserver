@@ -1,6 +1,6 @@
 {
   "name": "pushserver",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Pushserver is a push management platform for both IOS and Android notifications. It manages several applications, proposes a REST API and a GUI for administration and testing purpose.",
   "private": false,
   "author": "Frédéric Barrau",
