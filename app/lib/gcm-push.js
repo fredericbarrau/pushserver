@@ -8,8 +8,10 @@ var debug = require('debug')('pushserver:gcm-push'),
   _ = require('lodash');
 Promise.promisifyAll(gcm.Sender.prototype);
 
-var GCM_BULK_LIMIT = 1000,
-  errorList = ["InvalidRegistration", "NotRegistered"];
+var GCM_BULK_LIMIT = 1000, // max number of tokens that can be send simultenously (GCM plaform limit)
+  errorList = ["InvalidRegistration", "NotRegistered","MismatchSenderId"]; // error message handled : if a token encounter one of these, it's removed from the DB
+      // see https://developers.google.com/cloud-messaging/http-server-ref#table9
+      
 /**
  * GcmPushManager
  * GCM push handler
