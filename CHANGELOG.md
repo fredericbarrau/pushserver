@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.2
+  * Fixing issue#8 :  customCriteria should be an object or a string as stated in documentation
+
 ## 0.5.1
   * Upgrading mongoose & mongoose-paginate
   * Fix high CPU & memory usage for push to 1M+ devices ( [see. fix #006](https://github.com/fredericbarrau/pushserver/issues/6))
