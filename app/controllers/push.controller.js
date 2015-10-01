@@ -63,6 +63,8 @@ var PushController = function(mongooseModel, pushCon) {
       // further filtering using the customCriteria, if any
       if (typeof pushObj.customCriteria === "string" && pushObj.customCriteria !== "") {
         customCriteria = JSON.parse(pushObj.customCriteria);
+      } else {
+        customCriteria = pushObj.customCriteria;
       }
 
       // Fixing issue#6 using the lean mongoose param 

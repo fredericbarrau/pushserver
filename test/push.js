@@ -203,8 +203,7 @@ describe("Push API", function() {
       });
   });
 
-
-  it("- should simulate an APPLICATION push with customCriteria #1 ", function(done) {
+  it("- should simulate an APPLICATION push with customCriteria #1 as string", function(done) {
     // simulate a push to an application for "sport push" only
     var testPush = {
       "application": sampleApplications[0].id,
@@ -231,7 +230,7 @@ describe("Push API", function() {
         done();
       });
   });
-  it("- should simulate an APPLICATION push with customCriteria #2 ", function(done) {
+  it("- should simulate an APPLICATION push with customCriteria #2 as string", function(done) {
     // simulate a push to an application with "no news push"
     var testPush = {
       "application": sampleApplications[0].id,
@@ -258,7 +257,7 @@ describe("Push API", function() {
         done();
       });
   });
-  it("- should simulate an APPLICATION push with customCriteria #3 ", function(done) {
+  it("- should simulate an APPLICATION push with customCriteria #3 as string", function(done) {
     // simulate a push to an application with "no news push" AND customArray contains "22"
     var testPush = {
       "application": sampleApplications[0].id,
@@ -290,6 +289,92 @@ describe("Push API", function() {
       });
   });
 
+
+  it("- should simulate an APPLICATION push with customCriteria #1 as object", function(done) {
+    // simulate a push to an application for "sport push" only
+    var testPush = {
+      "application": sampleApplications[0].id,
+      "payload": {
+        "message": "a simple message"
+      },
+      "customCriteria": {"sport":true},
+      "simulate": true
+    };
+
+    superagent.post(global.serverUrl + "/api/pushes")
+      .send(testPush)
+      .end(function(err, res) {
+        // should return the tokens to send the push to 
+        res.statusCode.should.equal(201);
+        // all the device tokens with sport should be returned 
+        res.body.should.be.instanceOf(Array);
+        res.body.length.should.equal(1);
+        res.body[0].should.have.property("tokens");
+        res.body[0].tokens.length.should.equal(3);
+        res.body[0].should.have.property("application");
+        res.body[0].application.should.equal(sampleApplications[0].id);
+
+        done();
+      });
+  });
+  it("- should simulate an APPLICATION push with customCriteria #2 as object", function(done) {
+    // simulate a push to an application with "no news push"
+    var testPush = {
+      "application": sampleApplications[0].id,
+      "payload": {
+        "message": "a simple message"
+      },
+      "customCriteria": {"news":{"$ne":true}},
+      "simulate": true
+    };
+
+    superagent.post(global.serverUrl + "/api/pushes")
+      .type('application/json')
+      .send(testPush)
+      .end(function(err, res) {
+        // should return the tokens to send the push to 
+        res.statusCode.should.equal(201);
+        // all the device tokens with sport should be returned 
+        res.body.should.be.instanceOf(Array);
+        res.body.length.should.equal(1);
+        res.body[0].should.have.property("tokens");
+        res.body[0].tokens.length.should.equal(5);
+        res.body[0].should.have.property("application");
+        res.body[0].application.should.equal(sampleApplications[0].id);
+        done();
+      });
+  });
+  it("- should simulate an APPLICATION push with customCriteria #3 as object", function(done) {
+    // simulate a push to an application with "no news push" AND customArray contains "22"
+    var testPush = {
+      "application": sampleApplications[0].id,
+      "payload": {
+        "message": "a simple message"
+      },
+      "customCriteria": {"news":{"$ne":true},"customArray":"22"},
+      "simulate": true
+    };
+
+    superagent.post(global.serverUrl + "/api/pushes")
+      .type('application/json')
+      .send(testPush)
+      .end(function(err, res) {
+        console.log(res.body);
+        // should return the tokens to send the push to 
+        res.statusCode.should.equal(201);
+
+        res.body.should.be.instanceOf(Array);
+        res.body.length.should.equal(1);
+        res.body[0].should.have.property("tokens");
+        res.body[0].tokens.length.should.equal(1);
+        res.body[0].should.have.property("application");
+        res.body[0].application.should.equal(sampleApplications[0].id);
+        // this one is the 7th of the sample set 
+        res.body[0].tokens[0].should.equal(sampleData.devices[7].token);
+        //console.log(res.body);
+        done();
+      });
+  });
   it("- should simulate a TARGET push", function(done) {
     // simulate a push to a target
     var testPush = {
@@ -318,7 +403,7 @@ describe("Push API", function() {
       });
   });
 
-  it("- should simulate a TARGET push with customCriteria #1 ", function(done) {
+  it("- should simulate a TARGET push with customCriteria #1 as string", function(done) {
     // simulate a push to an TARGET for "sport push" only
     var testPush = {
       "target": sampleTarget.id,
@@ -347,7 +432,7 @@ describe("Push API", function() {
         done();
       });
   });
-  it("- should simulate a TARGET push with customCriteria #2 ", function(done) {
+  it("- should simulate a TARGET push with customCriteria #2 as string", function(done) {
     // simulate a push to an TARGET with "no news push"
     var testPush = {
       "target": sampleTarget.id,
@@ -374,7 +459,95 @@ describe("Push API", function() {
         done();
       });
   });
-  it("- should simulate a TARGET push with customCriteria #3 ", function(done) {
+  it("- should simulate a TARGET push with customCriteria #3 as string", function(done) {
+    // simulate a push to an TARGET with "no news push" AND customArray contains "22"
+    var testPush = {
+      "target": sampleTarget.id,
+      "payload": {
+        "message": "a simple message"
+      },
+      "customCriteria": '{"news":{"$ne":true},"customArray":"22"}',
+      "simulate": true
+    };
+
+    superagent.post(global.serverUrl + "/api/pushes")
+      .type('application/json')
+      .send(testPush)
+      .end(function(err, res) {
+        // should return the tokens to send the push to 
+        res.statusCode.should.equal(201);
+        // all the device tokens with sport should be returned 
+
+        // two applications returned : those in the target
+        res.body.length.should.equal(2);
+        res.body[0].should.have.property("tokens");
+        res.body[0].tokens.length.should.equal(1);
+
+        res.body[0].should.have.property("tokens");
+        res.body[0].tokens.length.should.equal(1);
+
+
+        done();
+      });
+  });
+
+  it("- should simulate a TARGET push with customCriteria #1 as object", function(done) {
+    // simulate a push to an TARGET for "sport push" only
+    var testPush = {
+      "target": sampleTarget.id,
+      "payload": {
+        "message": "a simple message"
+      },
+      "customCriteria": '{"sport":true}',
+      "simulate": true
+    };
+
+    superagent.post(global.serverUrl + "/api/pushes")
+      .send(testPush)
+      .end(function(err, res) {
+        // should return the tokens to send the push to 
+        res.statusCode.should.equal(201);
+
+        res.body.should.be.instanceOf(Array);
+        // two applications returned : those in the target
+        res.body.length.should.equal(2);
+        res.body[0].should.have.property("tokens");
+        res.body[0].tokens.length.should.equal(3);
+
+        res.body[0].should.have.property("tokens");
+        res.body[0].tokens.length.should.equal(3);
+
+        done();
+      });
+  });
+  it("- should simulate a TARGET push with customCriteria #2 as object", function(done) {
+    // simulate a push to an TARGET with "no news push"
+    var testPush = {
+      "target": sampleTarget.id,
+      "payload": {
+        "message": "a simple message"
+      },
+      "customCriteria": '{"news":{"$ne":true}}',
+      "simulate": true
+    };
+
+    superagent.post(global.serverUrl + "/api/pushes")
+      .send(testPush)
+      .end(function(err, res) {
+        // should return the tokens to send the push to 
+        res.statusCode.should.equal(201);
+        // all the device tokens with sport should be returned
+        // two applications returned : those in the target
+        res.body.length.should.equal(2);
+        res.body[0].should.have.property("tokens");
+        res.body[0].tokens.length.should.equal(5);
+
+        res.body[0].should.have.property("tokens");
+        res.body[0].tokens.length.should.equal(5);
+        done();
+      });
+  });
+  it("- should simulate a TARGET push with customCriteria #3 as object", function(done) {
     // simulate a push to an TARGET with "no news push" AND customArray contains "22"
     var testPush = {
       "target": sampleTarget.id,
