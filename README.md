@@ -345,7 +345,7 @@ target|string|X(*)|Target ID for this notification [See sending a push](#sending
 application|string|X(*)|Application ID this notification [See sending a push](#sending-a-push).
 device|string|X(*)| Device ID for this notificaiton [See sending a push](#sending-a-push)
 payload|string or stringified json|X|the payload to send to the targetted devices.
-customCriteria|stringified json || a mongodb query [See custom query](#sending-a-push)
+customCriteria|stringified json / object || a mongodb query [See custom query](#sending-a-push)
 simulate|boolean|| If true, returns the tokens targetted by this notification. Notification are NOT sent. 
 
 When returned by the API, the push object contains these additional fields : 
@@ -450,6 +450,17 @@ Given the previous device example, you can also **exclude** that particular devi
   "application" : "<your app ID>"
   "payload" : "Hello premium dudes minus bla !",
   "customCriteria" : {"userMail":{"$not":"bla@yopmail.com"}}
+ }
+ ```
+
+ Note that customCritera can be a string; this is equivalent to the example above : 
+
+  `POST /api/pushes/push`
+ ```javascript
+ {
+  "application" : "<your app ID>"
+  "payload" : "Hello premium dudes minus bla !",
+  "customCriteria" : '{"userMail":{"$not":"bla@yopmail.com"}}''
  }
  ```
 
