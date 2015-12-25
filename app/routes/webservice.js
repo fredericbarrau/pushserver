@@ -61,6 +61,7 @@ router.all("*",middlewares.corsEnable);
 
   debug('Defining Rest ' + item + ' routes');
   router.get('/' + item + 's', function(req, res, next) {
+    middlewares.inputUnserialize(req,res,next,item + 's');
     basicRest.getCollection(req, res, next, controller);
   });
 
@@ -72,21 +73,28 @@ router.all("*",middlewares.corsEnable);
     basicRest.delete(req, res, next, controller);
   });
 
-  router.put('/' + item + 's/' + item, function(req, res, next) {
+  router.put('/' + item + 's/' + item,
+    middlewares.inputUnserialize(req,res,next,item),
+    function(req, res, next) {
     basicRest.put(req, res, next, controller);
   });
 
-  router.post(['/' + item + 's/' + item, '/' + item + 's/'], function(req, res, next) {
+  router.post(['/' + item + 's/' + item, '/' + item + 's/'], 
+    middlewares.inputUnserialize(req,res,next,item),
+    function(req, res, next) {
     basicRest.post(req, res, next, controller);
   });
 });
 
 /* Push Rest */
+
 router.get('/pushes', function(req, res, next) {
   basicRest.getCollection(req, res, next, pushController);
 });
 
-router.post(['/pushes', '/pushes/push'], function(req, res, next) {
+router.post(['/pushes', '/pushes/push'],
+  middlewares.inputUnserialize(req,res,next,item),
+  function(req, res, next) {
   if (req.body.simulate) {
     // perform simulation of sending a push : return the tokens
     pushController.simulateAction(req.body, function(err, tokens) {
