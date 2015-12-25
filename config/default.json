@@ -34,6 +34,7 @@
     "bindAddressGUI": ["0.0.0.0"],
     "log" : {
         "access" : true
-    }
+    },
+    "emberDataCompatible": false
   }
 }

@@ -37,6 +37,8 @@ if (bindAddressAPI) {
 // validating content-type
 router.post("*", middlewares.validateAPIContentType); 
 router.put("*", middlewares.validateAPIContentType);
+// Adding CORS policy
+router.all("*",middlewares.corsEnable);
 
 /* APPLICATION RESTful. */
 

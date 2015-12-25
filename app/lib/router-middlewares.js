@@ -5,7 +5,8 @@ var _ = require('lodash'),
   debug = require('debug')('pushserver:middlewares'),
   pjson = require('./../../package.json'),
   moment = require('moment'),
-  models = require('../models/mongoose-connect').models;
+  models = require('../models/mongoose-connect').models,
+  config = require('config').get('pushserver');
 
 /**
  * viewHelpers middleware : provide additionnal informations to views
@@ -107,10 +108,46 @@ var validateAPIContentType = function(req,res,next) {
 };
 
 
+/**
+ * rather open for now. 
+ * @param  {[type]}   req  [description]
+ * @param  {[type]}   res  [description]
+ * @param  {Function} next [description]
+ * @return {[type]}        [description]
+ */
+var corsEnable = function() {
+  return function(req,res,next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "POST,PUT,GET,HEAD,DELETE");
+    next();
+  };
+};
+
+/**
+ * Formatting output data 
+ * Enables ember-data if config OR query "emberDataCompatible" is set to "true"
+ * @param  {[type]}   req  [description]
+ * @param  {[type]}   res  [description]
+ * @param  {Function} next [description]
+ * @return {[type]}        [description]
+ */
+var outputFormat(req,res,next) {
+  if (res.locals.data) {
+    if (config.get('emberDataCompatible') || req.params.emberDataCompatible ) {
+
+    }
+  }
+  next();
+}
+
+
+
 module.exports = {
   bindAddresses : bindAddresses,
   viewHelpers : viewHelpers,
-  validateAPIContentType: validateAPIContentType
+  validateAPIContentType: validateAPIContentType,
+  corsEnable : corsEnable
 };
 
 

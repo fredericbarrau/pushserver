@@ -1,4 +1,5 @@
 var debug = require('debug')('pushserver:basicrest'),
+  collectionName = require('models/mongoose-models').collectionsName, 
   util = require('util');
 
 // basic_rest.js
@@ -22,7 +23,10 @@ var rest = {
           res.append("TotalItemsCount",objs.length);
         }
         debug(objs);
-        res.json(objs);
+        // storing data to be sent
+        //res.locals.dataType = collectionName[controller.model.];
+        debug(controller.model);
+        res.locals.data = objs;
       }
     });
   },
@@ -35,7 +39,8 @@ var rest = {
         debug("Get Error : ", err);
         next(err);
       } else {
-        res.json(foundObject);
+        // storing data to be sent
+        res.locals.data = foundObject;
       }
     });
   },
@@ -50,7 +55,9 @@ var rest = {
         err.status = 400;
         next(err);
       } else {
-        res.status(201).json(obj);
+        res.status(201);
+        // storing data to be sent
+        res.locals.data = obj;
       }
     });
   },
@@ -64,7 +71,9 @@ var rest = {
         err.status = 400;
         next(err);
       } else {
-        res.status(201).json(obj);
+        res.status(201)
+        // storing data to be sent
+        res.locals.data = obj;
       }
     });
   },
@@ -79,7 +88,8 @@ var rest = {
         err.status = 400;
         next(err);
       } else {
-        res.json(obj);
+        // storing data to be sent
+        res.locals.data = obj;
       }
     });
   },
