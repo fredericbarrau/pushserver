@@ -1,3 +1,4 @@
+"use strict";
 // webservices.js
 var debug = require('debug')('pushserver:webservices'),
   express = require('express'),
@@ -61,7 +62,7 @@ router.all("*",middlewares.corsEnable);
 
   debug('Defining Rest ' + item + ' routes');
   router.get('/' + item + 's', function(req, res, next) {
-    middlewares.inputUnserialize(req,res,next,item + 's');
+    middlewares.inputUnserialize(req,res,next,controller);
     basicRest.getCollection(req, res, next, controller);
   });
 
@@ -74,15 +75,20 @@ router.all("*",middlewares.corsEnable);
   });
 
   router.put('/' + item + 's/' + item,
-    middlewares.inputUnserialize(req,res,next,item),
     function(req, res, next) {
-    basicRest.put(req, res, next, controller);
+      middlewares.inputUnserialize(req,res,next,controller);
+      basicRest.put(req, res, next, controller);
   });
 
-  router.post(['/' + item + 's/' + item, '/' + item + 's/'], 
-    middlewares.inputUnserialize(req,res,next,item),
+  router.post(['/' + item + 's/' + item, '/' + item + 's/'],
     function(req, res, next) {
-    basicRest.post(req, res, next, controller);
+      middlewares.inputUnserialize(req,res,next,controller);
+      basicRest.post(req, res, next, controller);
+  });
+
+  // formatting output
+  router.all('/' + item + 's',function(req, res, next){
+    middlewares.outputSerialize(req,res,next,controller);
   });
 });
 
@@ -93,8 +99,8 @@ router.get('/pushes', function(req, res, next) {
 });
 
 router.post(['/pushes', '/pushes/push'],
-  middlewares.inputUnserialize(req,res,next,item),
   function(req, res, next) {
+  middlewares.inputUnserialize(req,res,next,pushController);
   if (req.body.simulate) {
     // perform simulation of sending a push : return the tokens
     pushController.simulateAction(req.body, function(err, tokens) {
@@ -112,6 +118,11 @@ router.post(['/pushes', '/pushes/push'],
 
 router.get('/pushes/push/:ID/', function(req, res, next) {
   basicRest.get(req, res, next, pushController);
+});
+
+// formatting output
+router.all('/puhses',function(req, res, next) {
+  middlewares.outputSerialize(req,res,next,pushController);
 });
 
 module.exports = router;

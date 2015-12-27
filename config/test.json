@@ -1,7 +1,7 @@
 {
   "pushserver": {
     "dbConfig": {
-      "connectionUrl": "mongodb://localhost/pushserver-test"
+      "connectionUrl": "mongodb://mac-mini.local/pushserver-test"
     },
     "name": "DEV - Test Push Manager",
     "port": 4000,

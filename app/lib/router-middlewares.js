@@ -1,3 +1,4 @@
+"use strict";
 /* 
  * local middlewre used by routers
  */
@@ -36,8 +37,8 @@
     var app = models.application,
     targ = models.target;
     app.find({}).sort({
-      "name": 1,
-      "type": 1
+      name: 1,
+      type: 1
     }).find(function(err, apps) {
       if (err) {
         err.status = 500;
@@ -46,7 +47,7 @@
       // reindex the array using the id field
       res.locals.allApplications = _.indexBy(apps, 'id');
       targ.find({}).sort({
-        "name": 1
+        name: 1
       }).find(function(err, targets) {
         if (err) {
           err.status = 500;
@@ -59,7 +60,7 @@
       });
     });
   }; // return
-}
+};
 /**
  * Middleware for filtering access to a list of IPs
  * @param {array} bindIps
@@ -132,35 +133,35 @@
  * @param  {Function} next [description]
  * @return {[type]}        [description]
  */
- var outputSerialize = function(req,res,next) {
+ var outputSerialize = function(req,res,next,controller) {
   var outputData = {};
   if (res.locals.data) {
     if (config.get('emberDataCompatible') || req.params.emberDataCompatible ) {
-      if (res.locals.data instanceof Array) {= {}
-        outputData[this.model._collectionName] = res.locals.data;
+      if (res.locals.data instanceof Array) {
+        outputData[ controller.model._collectionName ] = res.locals.data;
         res.locals.data = outputData;
         res.locals.meta = {};
         res.locals.meta.total_elements = res.get("TotalItemsCount");
         res.locals.meta.total_pages = res.get("PageItemsCount");
       } else if (res.locals.data instanceof Object) {
-        outputData[this.model._objectCollectionName] = res.locals.data;
+        outputData[controller.model._objectCollectionName] = res.locals.data;
         res.locals.data = outputData;
       }
     }
   }
   next();
-}
+};
 
 /**
  * Retrieve data from ember-data format
  * @param {data} : object [object/array to format]
  * @return {data/object} [ember-data compatible data]
  */
-function inputUnserialize = function(req,res,next,type) {
-  if (config.get('emberDataCompatible') || req.params.emberDataCompatible ) {
+ var inputUnserialize = function(req,res,next,controller) {
+  var type = controller.model._objectCollectionName;
+  if ( config.get('emberDataCompatible') || req.params.emberDataCompatible ) {
     if ( req.body && req.body.data[type] ) {
-        req.body.data = req.body.data[type];
-      }
+      req.body.data = req.body.data[type];
     }
   }
   next();
@@ -172,8 +173,7 @@ module.exports = {
   validateAPIContentType: validateAPIContentType,
   corsEnable : corsEnable,
   inputUnserialize : inputUnserialize,
-  outputSerialize : outputSerialize,
-  inputUnserialize : inputUnserialize
+  outputSerialize : outputSerialize
 };
 
 

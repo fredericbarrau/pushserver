@@ -1,5 +1,5 @@
 var debug = require('debug')('pushserver:basicrest'),
-  collectionName = require('models/mongoose-models').collectionsName, 
+  collectionName = require('../models/mongoose-models').collectionsName, 
   util = require('util');
 
 // basic_rest.js
