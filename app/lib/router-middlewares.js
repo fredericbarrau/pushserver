@@ -104,10 +104,9 @@
     err.status = 406;
     next(err);
   } else {
-    next(err);
+    next();
   }
 };
-
 
 /**
  * rather open for now. 
@@ -116,13 +115,11 @@
  * @param  {Function} next [description]
  * @return {[type]}        [description]
  */
- var corsEnable = function() {
-  return function(req,res,next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Access-Control-Allow-Methods", "POST,PUT,GET,HEAD,DELETE");
-    next();
-  };
+ var corsEnable = function(req,res,next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "POST,PUT,GET,HEAD,DELETE");
+  next();
 };
 
 /**
@@ -133,39 +130,58 @@
  * @param  {Function} next [description]
  * @return {[type]}        [description]
  */
- var outputSerialize = function(req,res,next,controller) {
+var outputSerialize = function (req,res,next) {
+  debug(req.query);
   var outputData = {};
   if (res.locals.data) {
-    if (config.get('emberDataCompatible') || req.params.emberDataCompatible ) {
+    if (config.get('emberDataCompatible') || res.locals.options.emberDataCompatible === "true") {
       if (res.locals.data instanceof Array) {
-        outputData[ controller.model._collectionName ] = res.locals.data;
+        outputData[ res.locals.dataType ] = res.locals.data;
         res.locals.data = outputData;
         res.locals.meta = {};
         res.locals.meta.total_elements = res.get("TotalItemsCount");
         res.locals.meta.total_pages = res.get("PageItemsCount");
       } else if (res.locals.data instanceof Object) {
-        outputData[controller.model._objectCollectionName] = res.locals.data;
+        outputData[res.locals.dataType] = res.locals.data;
         res.locals.data = outputData;
+      } else {
+        res.status(404);
+        var err = new Error('Data not in ember format');
+        return next(err);
       }
     }
   }
   next();
 };
 
+
 /**
  * Retrieve data from ember-data format
  * @param {data} : object [object/array to format]
  * @return {data/object} [ember-data compatible data]
  */
- var inputUnserialize = function(req,res,next,controller) {
-  var type = controller.model._objectCollectionName;
-  if ( config.get('emberDataCompatible') || req.params.emberDataCompatible ) {
+var inputUnserialize = function(req,res,next,type) {
+  if ( config.get('emberDataCompatible') || res.locals.options.emberDataCompatible === "true") {
     if ( req.body && req.body.data[type] ) {
       req.body.data = req.body.data[type];
     }
   }
-  next();
 };
+/**
+ * handling query internal options (not for filtering)
+ * @param  {[type]} req    [description]
+ * @param  {[type]} res    [description]
+ * @param  {Object} next() {             res.locals.options [description]
+ * @return {[type]}        [description]
+ */
+var handleOptions = function (req,res,next) {
+  res.locals.options = {};
+  if (req.query.emberDataCompatible) {
+    res.locals.options.emberDataCompatible = req.query.emberDataCompatible;
+    delete(req.query.emberDataCompatible);
+  }
+  next();
+}
 
 module.exports = {
   bindAddresses : bindAddresses,
@@ -173,7 +189,6 @@ module.exports = {
   validateAPIContentType: validateAPIContentType,
   corsEnable : corsEnable,
   inputUnserialize : inputUnserialize,
-  outputSerialize : outputSerialize
+  outputSerialize : outputSerialize,
+  handleOptions: handleOptions
 };
-
-

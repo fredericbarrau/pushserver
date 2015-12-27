@@ -23,10 +23,11 @@ var rest = {
           res.append("TotalItemsCount",objs.length);
         }
         debug(objs);
-        // storing data to be sent
-        //res.locals.dataType = collectionName[controller.model.];
         debug(controller.model);
+        // storing data to be sent
         res.locals.data = objs;
+        res.locals.dataType = controller.model._collectionName;
+        next();
       }
     });
   },
@@ -41,6 +42,8 @@ var rest = {
       } else {
         // storing data to be sent
         res.locals.data = foundObject;
+        res.locals.dataType = controller.model._modelName;
+        next();
       }
     });
   },
@@ -58,6 +61,8 @@ var rest = {
         res.status(201);
         // storing data to be sent
         res.locals.data = obj;
+        res.locals.dataType = controller.model._modelName;
+        next();
       }
     });
   },
@@ -74,6 +79,8 @@ var rest = {
         res.status(201)
         // storing data to be sent
         res.locals.data = obj;
+        res.locals.dataType = controller.model._modelName;
+        next();
       }
     });
   },
@@ -90,6 +97,8 @@ var rest = {
       } else {
         // storing data to be sent
         res.locals.data = obj;
+        res.locals.dataType = controller.model._modelName;
+        next();
       }
     });
   },

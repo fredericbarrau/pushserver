@@ -164,16 +164,16 @@ var collectionsName = {
 };
 
 // adding the collection and the logical model name
-mongoose.model(collectionsName.application, applicationSchema)["_objectCollectionName"] = 'application';
+mongoose.model(collectionsName.application, applicationSchema)["_modelName"] = 'application';
 mongoose.model(collectionsName.application, applicationSchema)["_collectionName"] = 'applications';
 
-mongoose.model(collectionsName.target, targetSchema)["_objectCollectionName"] = 'target';
+mongoose.model(collectionsName.target, targetSchema)["_modelName"] = 'target';
 mongoose.model(collectionsName.target, targetSchema)["_collectionName"] = 'targets';
 
-mongoose.model(collectionsName.device, deviceSchema)["_objectCollectionName"] = 'device';
+mongoose.model(collectionsName.device, deviceSchema)["_modelName"] = 'device';
 mongoose.model(collectionsName.device, deviceSchema)["_collectionName"] = 'devices';
 
-mongoose.model(collectionsName.push, pushSchema)["_objectCollectionName"] = 'push';
+mongoose.model(collectionsName.push, pushSchema)["_modelName"] = 'push';
 mongoose.model(collectionsName.push, pushSchema)["_collectionName"] = 'pushes';
 
 module.exports = {

@@ -36,13 +36,12 @@ if (bindAddressAPI) {
 }
 
 // validating content-type
-router.post("*", middlewares.validateAPIContentType); 
+router.post("*", middlewares.validateAPIContentType);
 router.put("*", middlewares.validateAPIContentType);
 // Adding CORS policy
-router.all("*",middlewares.corsEnable);
+router.all("*", middlewares.corsEnable, middlewares.handleOptions);
 
 /* APPLICATION RESTful. */
-
 ['application', 'target', 'device'].forEach(function(item) {
   var controller = null;
   switch (item) {
@@ -62,7 +61,6 @@ router.all("*",middlewares.corsEnable);
 
   debug('Defining Rest ' + item + ' routes');
   router.get('/' + item + 's', function(req, res, next) {
-    middlewares.inputUnserialize(req,res,next,controller);
     basicRest.getCollection(req, res, next, controller);
   });
 
@@ -74,33 +72,25 @@ router.all("*",middlewares.corsEnable);
     basicRest.delete(req, res, next, controller);
   });
 
-  router.put('/' + item + 's/' + item,
-    function(req, res, next) {
-      middlewares.inputUnserialize(req,res,next,controller);
-      basicRest.put(req, res, next, controller);
+  router.put('/' + item + 's/' + item, function(req, res, next) {
+    middlewares.inputUnserialize(req,res,next,item);
+    basicRest.put(req, res, next, controller);
   });
 
-  router.post(['/' + item + 's/' + item, '/' + item + 's/'],
-    function(req, res, next) {
-      middlewares.inputUnserialize(req,res,next,controller);
-      basicRest.post(req, res, next, controller);
-  });
-
-  // formatting output
-  router.all('/' + item + 's',function(req, res, next){
-    middlewares.outputSerialize(req,res,next,controller);
+  router.post(['/' + item + 's/' + item, '/' + item + 's/'], function(req, res, next) {
+    middlewares.inputUnserialize(req,res,next,item);
+    basicRest.post(req, res, next, controller);
   });
 });
 
 /* Push Rest */
-
 router.get('/pushes', function(req, res, next) {
   basicRest.getCollection(req, res, next, pushController);
 });
 
 router.post(['/pushes', '/pushes/push'],
   function(req, res, next) {
-  middlewares.inputUnserialize(req,res,next,pushController);
+  middlewares.inputUnserialize(req,res,next,"push");
   if (req.body.simulate) {
     // perform simulation of sending a push : return the tokens
     pushController.simulateAction(req.body, function(err, tokens) {
@@ -108,7 +98,10 @@ router.post(['/pushes', '/pushes/push'],
         err.status = 400;
         next(err);
       } else {
-        res.status(201).json(tokens);
+        res.status(201);
+        res.locals.data  = tokens;
+        res.locals.dataType = 'push';
+        next();
       }
     });
   } else {
@@ -119,10 +112,17 @@ router.post(['/pushes', '/pushes/push'],
 router.get('/pushes/push/:ID/', function(req, res, next) {
   basicRest.get(req, res, next, pushController);
 });
-
-// formatting output
-router.all('/puhses',function(req, res, next) {
-  middlewares.outputSerialize(req,res,next,pushController);
+// formatting & sending data
+router.all('*',
+  // formatting output
+  middlewares.outputSerialize,
+  // sending output
+  function(req, res, next) {
+    if (res.locals.data) {
+      res.json(res.locals.data);  
+    } else {
+      next();  
+    }
 });
 
 module.exports = router;
