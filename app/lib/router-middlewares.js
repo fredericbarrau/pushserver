@@ -134,7 +134,7 @@ var outputSerialize = function (req,res,next) {
   debug(req.query);
   var outputData = {};
   if (res.locals.data) {
-    if (config.get('emberDataCompatible') || res.locals.options.emberDataCompatible === "true") {
+    if ( res.locals.options.emberDataCompatible === 'true' ) {
       // ember data format
       if (res.locals.data instanceof Array) {
         outputData[ res.locals.dataType ] = res.locals.data;
@@ -164,7 +164,7 @@ var outputSerialize = function (req,res,next) {
  * @return {data/object} [ember-data compatible data]
  */
 var inputUnserialize = function(req,res,next,type) {
-  if ( config.get('emberDataCompatible') || res.locals.options.emberDataCompatible === "true") {
+  if ( res.locals.options.emberDataCompatible === 'true' ) {
     if ( req.body && req.body.data[type] ) {
       req.body.data = req.body.data[type];
     }
@@ -179,12 +179,12 @@ var inputUnserialize = function(req,res,next,type) {
  */
 var handleOptions = function (req,res,next) {
   res.locals.options = {};
-  if (req.query.emberDataCompatible) {
-    res.locals.options.emberDataCompatible = req.query.emberDataCompatible;
+  if (config.get('emberDataCompatible') || res.locals.options.emberDataCompatible === "true" || req.get('EMBER_DATA_COMPATIBLE') === 'true') {
+    res.locals.options.emberDataCompatible = "true";
     delete(req.query.emberDataCompatible);
   }
   next();
-}
+};
 
 module.exports = {
   bindAddresses : bindAddresses,
