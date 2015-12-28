@@ -116,9 +116,9 @@
  * @return {[type]}        [description]
  */
  var corsEnable = function(req,res,next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header("Access-Control-Allow-Methods", "POST,PUT,GET,HEAD,DELETE");
+  res.append("Access-Control-Allow-Origin", "*");
+  res.append("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.append("Access-Control-Allow-Methods", "POST,PUT,GET,HEAD,DELETE");
   next();
 };
 
