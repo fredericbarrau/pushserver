@@ -135,20 +135,23 @@ var outputSerialize = function (req,res,next) {
   var outputData = {};
   if (res.locals.data) {
     if (config.get('emberDataCompatible') || res.locals.options.emberDataCompatible === "true") {
+      // ember data format
       if (res.locals.data instanceof Array) {
         outputData[ res.locals.dataType ] = res.locals.data;
-        res.locals.data = outputData;
-        res.locals.meta = {};
-        res.locals.meta.total_elements = res.get("TotalItemsCount");
-        res.locals.meta.total_pages = res.get("PageItemsCount");
       } else if (res.locals.data instanceof Object) {
         outputData[res.locals.dataType] = res.locals.data;
-        res.locals.data = outputData;
       } else {
         res.status(404);
         var err = new Error('Data not in ember format');
         return next(err);
       }
+      // setting meta data
+      outputData.meta = res.locals.metaData;
+      res.locals.data = outputData;
+    } else {
+      // v0 format : meta in header
+      res.append("TotalItemsCount",res.locals.total_items);
+      res.append("PageItemsCount",res.locals.page_items_count);
     }
   }
   next();

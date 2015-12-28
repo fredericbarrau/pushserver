@@ -15,12 +15,17 @@ var rest = {
         next(err);
       } else {
         debug("Number of Item returned =",itemCount);
-        // adding the number of element in the header
+        // adding the number of elements
         if (itemCount) {
-          res.append("TotalItemsCount",itemCount);
-          res.append("PageItemsCount",objs.length);
+          res.locals.metaData = {
+            total_items : itemCount,
+            page_items_count : objs.length
+          };
         } else {
-          res.append("TotalItemsCount",objs.length);
+          res.locals.metaData = {
+            total_items : objs.length,
+            page_items_count : null
+          };
         }
         debug(objs);
         debug(controller.model);
