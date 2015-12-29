@@ -187,7 +187,6 @@ var inputUnserialize = function(type) {
  */
 var handleOptions = function() {
   return function(req, res, next) {
-    console.log(req.query);
     res.locals.options = {};
     if (config.get('emberDataCompatible') || req.query.emberDataCompatible === "true"  || req.query.emberDataCompatible === "1" || req.get('EMBER_DATA_COMPATIBLE') === 'true') {
       res.locals.options.emberDataCompatible = "true";
