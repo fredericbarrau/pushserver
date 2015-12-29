@@ -2,16 +2,10 @@
 // webservices.js
 var debug = require('debug')('pushserver:webservices'),
   express = require('express'),
-  _ = require('lodash'),
   router = express.Router(),
   config = require('config').get('pushserver'),
   middlewares = require('../lib/router-middlewares'),
-  
-  // WORKER
-  apnsPushManager = require('./../lib/apns-push'),
-
   basicRest = require('./../lib/basic-rest'),
-  pushConnections = require('./../lib/push-connections'),
   // CONTROLLERS
   applicationController = require('./../controllers/application.controller'),
   deviceController = require('./../controllers/device.controller'),
@@ -36,10 +30,10 @@ if (bindAddressAPI) {
 }
 
 // validating content-type
-router.post("*", middlewares.validateAPIContentType);
-router.put("*", middlewares.validateAPIContentType);
-// Adding CORS policy
-router.all("*", middlewares.corsEnable, middlewares.handleOptions);
+router.post("*", middlewares.validateAPIContentType());
+router.put("*", middlewares.validateAPIContentType());
+// Adding CORS policy & handling format options
+router.all("*", middlewares.cors(), middlewares.handleOptions());
 
 /* APPLICATION RESTful. */
 ['application', 'target', 'device'].forEach(function(item) {
@@ -72,14 +66,16 @@ router.all("*", middlewares.corsEnable, middlewares.handleOptions);
     basicRest.delete(req, res, next, controller);
   });
 
-  router.put('/' + item + 's/' + item, function(req, res, next) {
-    middlewares.inputUnserialize(req,res,next,item);
-    basicRest.put(req, res, next, controller);
+  router.put('/' + item + 's/' + item,
+    middlewares.inputUnserialize(item),
+    function(req, res, next) {
+      basicRest.put(req, res, next, controller);
   });
 
-  router.post(['/' + item + 's/' + item, '/' + item + 's/'], function(req, res, next) {
-    middlewares.inputUnserialize(req,res,next,item);
-    basicRest.post(req, res, next, controller);
+  router.post(['/' + item + 's/' + item, '/' + item + 's/'], 
+    middlewares.inputUnserialize(item),
+    function(req, res, next) {
+      basicRest.post(req, res, next, controller);
   });
 });
 
@@ -89,8 +85,8 @@ router.get('/pushes', function(req, res, next) {
 });
 
 router.post(['/pushes', '/pushes/push'],
+  middlewares.inputUnserialize("push"),
   function(req, res, next) {
-  middlewares.inputUnserialize(req,res,next,"push");
   if (req.body.simulate) {
     // perform simulation of sending a push : return the tokens
     pushController.simulateAction(req.body, function(err, tokens) {
@@ -115,7 +111,7 @@ router.get('/pushes/push/:ID/', function(req, res, next) {
 // formatting & sending data
 router.all('*',
   // formatting output
-  middlewares.outputSerialize,
+  middlewares.outputSerialize(),
   // sending output
   function(req, res, next) {
     if (res.locals.data) {
