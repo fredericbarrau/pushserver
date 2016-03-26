@@ -2,7 +2,7 @@ var superagent = require('superagent'),
   _ = require('lodash'),
   mongoose = require('mongoose'),
   db = require('../app/models/mongoose-connect');
-  sampleData = require('./data/sample-data'); // loading test data
+sampleData = require('./data/sample-data'); // loading test data
 
 // temp var
 var currentApp = {},
@@ -42,7 +42,7 @@ describe('Rest API', function() {
   // dropping test data 
   after(function(done) {
     mongoose.connection.db.dropDatabase(function() {
-      done();  
+      done();
     });
   });
 
@@ -52,7 +52,7 @@ describe('Rest API', function() {
    */
   describe('[APPLICATIONS] Rest API', function() {
     var currentApp = {};
-     
+
     describe("#/api/applications/application", function() {
       it("- should validate POST content-type", function(done) {
         superagent.post(global.serverUrl + '/api/applications/application')
@@ -407,7 +407,7 @@ describe('Rest API', function() {
             }
           });
       });
-      
+
       /**
        * [put with an object containing an ID]
        * @param  {Function} done [description]
@@ -415,9 +415,6 @@ describe('Rest API', function() {
        */
       it("- should PUT (update) target with id query ", function(done) {
         currentTarget.name = 'Updated Name of the target';
-        // mongoDB issue when updating array : have to remove it or test fails :(
-        delete(currentTarget.applications);
-
         superagent.put(global.serverUrl + '/api/targets/target/')
           .type('application/json')
           .send(currentTarget)
@@ -433,6 +430,30 @@ describe('Rest API', function() {
             }
           });
       });
+      /**
+       * [put a target containing an ID and empty applications array - issue#17]
+       * @param  {Function} done [description]
+       * @return {[type]}        [description]
+       */
+      it("- should PUT (update) target with id query and an empty app array", function(done) {
+        currentTarget.name = 'Updated Name of the target again';
+        currentTarget.applications = [];
+        superagent.put(global.serverUrl + '/api/targets/target/')
+          .type('application/json')
+          .send(currentTarget)
+          .end(function(err, res) {
+            if (err) {
+              console.error(err.message);
+              done(err);
+            } else {
+              // console.log(res.body);
+              res.statusCode.should.equal(201);
+              checkTargetProp(res.body);
+              res.body.applications.should.be.instanceof(Array).and.have.length(0);
+              done();
+            }
+          });
+      });      
       /**
        * [no ID in the object to update, model will use the other field to find the object to update]
        * @param  {Function} done [description]
@@ -803,7 +824,7 @@ describe('Rest API', function() {
               done();
             }
           });
-      }); 
+      });
       /**
        * Deleting an object using its ID
        * @param  {Function} done [description]
