@@ -171,8 +171,11 @@ var outputSerialize = function() {
 var inputUnserialize = function(type) {
   return function(req, res, next) {
     if (res.locals.options.emberDataCompatible === 'true') {
-      if (req.body && req.body.data[type]) {
-        req.body.data = req.body.data[type];
+      if (req.body && req.body[type]) {
+        req.body = req.body[type];
+      }
+      if ( ( ! req.body.hasOwnProperty('id') )  && ( req.params.ID ) ) {
+        req.body.id = req.params.ID;
       }
     }
     next();

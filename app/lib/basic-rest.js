@@ -1,6 +1,5 @@
-var debug = require('debug')('pushserver:basicrest'),
-  collectionName = require('../models/mongoose-models').collectionsName, 
-  util = require('util');
+"use strict";
+var debug = require('debug')('pushserver:basicrest');
 
 // basic_rest.js
 var rest = {
@@ -18,11 +17,13 @@ var rest = {
         // adding the number of elements
         if (itemCount) {
           res.locals.metaData = {
+            total_pages : pageCount,
             total_items : itemCount,
             page_items_count : objs.length
           };
         } else {
           res.locals.metaData = {
+            total_pages : pageCount,
             total_items : objs.length,
             page_items_count : null
           };
@@ -81,7 +82,7 @@ var rest = {
         err.status = 400;
         next(err);
       } else {
-        res.status(201)
+        res.status(201);
         // storing data to be sent
         res.locals.data = obj;
         res.locals.dataType = controller.model._modelName;
@@ -106,7 +107,7 @@ var rest = {
         next();
       }
     });
-  },
+  }
 };
 
 module.exports = rest;

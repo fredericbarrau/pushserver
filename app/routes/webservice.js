@@ -58,21 +58,21 @@ router.all("*", middlewares.cors(), middlewares.handleOptions());
     basicRest.getCollection(req, res, next, controller);
   });
 
-  router.get('/' + item + 's/' + item + '/:ID', function(req, res, next) {
+  router.get(['/' + item + 's/' + item + '/:ID','/' + item + 's/:ID'], function(req, res, next) {
     basicRest.get(req, res, next, controller);
   });
 
-  router.delete('/' + item + 's/' + item + '/:ID', function(req, res, next) {
+  router.delete(['/' + item + 's/' + item + '/:ID','/' + item + 's/:ID'], function(req, res, next) {
     basicRest.delete(req, res, next, controller);
   });
 
-  router.put('/' + item + 's/' + item,
+  router.put(['/' + item + 's/' + item,'/' + item + 's/:ID'],
     middlewares.inputUnserialize(item),
     function(req, res, next) {
       basicRest.put(req, res, next, controller);
   });
 
-  router.post(['/' + item + 's/' + item, '/' + item + 's/'], 
+  router.post(['/' + item + 's/' + item, '/' + item + 's'], 
     middlewares.inputUnserialize(item),
     function(req, res, next) {
       basicRest.post(req, res, next, controller);
@@ -105,7 +105,7 @@ router.post(['/pushes', '/pushes/push'],
   }
 });
 
-router.get('/pushes/push/:ID/', function(req, res, next) {
+router.get(['/pushes/push/:ID/','/pushes/:ID'], function(req, res, next) {
   basicRest.get(req, res, next, pushController);
 });
 // formatting & sending data
