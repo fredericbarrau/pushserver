@@ -70,7 +70,7 @@ router.put("*", middlewares.validateAPIContentType);
     basicRest.delete(req, res, next, controller);
   });
 
-  router.put('/' + item + 's/' + item, function(req, res, next) {
+  router.put(['/' + item + 's/' + item, '/' + item + 's/' + item + '/:ID'], function(req, res, next) {
     basicRest.put(req, res, next, controller);
   });
 

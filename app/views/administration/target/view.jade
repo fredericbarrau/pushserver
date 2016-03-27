@@ -22,5 +22,6 @@ block admin-content
               .col-sm-10
                 p.form-control-static
                 each app in obj.applications
-                  span [#{allApplications[app].type}]#{allApplications[app].name} - 
+                  if allApplications[app]
+                    span [#{allApplications[app].type}]#{allApplications[app].name} - 
             +backToListButton

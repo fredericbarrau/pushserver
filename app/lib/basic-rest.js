@@ -58,6 +58,10 @@ var rest = {
     debug("Params received : %j",req.params);
     debug("Query received : %j",req.query);
     debug("Body received %j", req.body);
+    // if ID is provided in URL, this is the one we take
+    if (req.params.ID) {
+      req.body.id = req.params.ID;
+    }
     controller.putAction(req.body, function(err, obj) {
       if (err) {
         debug("Put Error : ", err);

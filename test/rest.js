@@ -413,9 +413,9 @@ describe('Rest API', function() {
        * @param  {Function} done [description]
        * @return {[type]}        [description]
        */
-      it("- should PUT (update) target with id query ", function(done) {
+      it("- should PUT (update) target with id query", function(done) {
         currentTarget.name = 'Updated Name of the target';
-        superagent.put(global.serverUrl + '/api/targets/target/')
+        superagent.put(global.serverUrl + '/api/targets/target/' + currentTarget.id)
           .type('application/json')
           .send(currentTarget)
           .end(function(err, res) {
@@ -425,7 +425,9 @@ describe('Rest API', function() {
             } else {
               // console.log(res.body);
               res.statusCode.should.equal(201);
+              res.body.name.should.be.equal("Updated Name of the target");
               checkTargetProp(res.body);
+              currentTarget = res.body;
               done();
             }
           });
@@ -436,9 +438,10 @@ describe('Rest API', function() {
        * @return {[type]}        [description]
        */
       it("- should PUT (update) target with id query and an empty app array", function(done) {
+        var id = currentTarget.id;
         currentTarget.name = 'Updated Name of the target again';
         currentTarget.applications = [];
-        superagent.put(global.serverUrl + '/api/targets/target/')
+        superagent.put(global.serverUrl + '/api/targets/target/' + currentTarget.id)
           .type('application/json')
           .send(currentTarget)
           .end(function(err, res) {
@@ -449,22 +452,49 @@ describe('Rest API', function() {
               // console.log(res.body);
               res.statusCode.should.equal(201);
               checkTargetProp(res.body);
+              res.body.name.should.be.equal("Updated Name of the target again");
               res.body.applications.should.be.instanceof(Array).and.have.length(0);
+              currentTarget = res.body;
               done();
             }
           });
-      });      
+      });
+      /**
+       * [put with an object containing an ID, with ID in the URL]
+       * @param  {Function} done [description]
+       * @return {[type]}        [description]
+       */
+      it("- should PUT (update) target with id query ", function(done) {
+        currentTarget.name = 'Updated Name of the target with ID';
+        superagent.put(global.serverUrl + '/api/targets/target/' + currentTarget.id)
+          .type('application/json')
+          .send(currentTarget)
+          .end(function(err, res) {
+            if (err) {
+              console.error(err.message);
+              done(err);
+            } else {
+              // console.log(res.body);
+              res.statusCode.should.equal(201);
+              checkTargetProp(res.body);
+              res.body.name.should.be.equal("Updated Name of the target with ID");
+              currentTarget = res.body;
+              done();
+            }
+          });
+      });
       /**
        * [no ID in the object to update, model will use the other field to find the object to update]
        * @param  {Function} done [description]
        * @return {[type]}        [description]
        */
-      it("- should PUT (update) target with custom criteria", function(done) {
+      it("- should PUT (update) target with custom criteria and no ID in body", function(done) {
+        var id = currentTarget.id;
         currentTarget.description = 'Updated Description of the target 2';
         // no ID for retrieving the target
         delete(currentTarget.id);
 
-        superagent.put(global.serverUrl + '/api/targets/target/')
+        superagent.put(global.serverUrl + '/api/targets/target/' + id)
           .type('application/json')
           .send(currentTarget)
           .end(function(err, res) {
@@ -473,7 +503,9 @@ describe('Rest API', function() {
               done(err);
             } else {
               res.statusCode.should.equal(201);
+              res.body.description.should.be.equal("Updated Description of the target 2");
               checkTargetProp(res.body);
+              currentTarget = res.body;
               done();
             }
           });
